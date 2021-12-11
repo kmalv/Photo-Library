@@ -2,6 +2,7 @@ package softmeth.android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -31,6 +32,12 @@ public class AlbumFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         String imagePath = result.getData().getData().getPath();
                         Toast.makeText(view.getContext(), "Image " + imagePath + " successfully loaded", Toast.LENGTH_LONG).show();
+
+                        // Attempt to navigate with path to load photo
+                        Uri uri = result.getData().getData();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("uri", uri);
+                        Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoFragment, bundle);
                     }
                 });
 
