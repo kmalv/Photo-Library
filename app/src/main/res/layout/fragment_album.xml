@@ -33,7 +33,7 @@
             android:weightSum="2">
 
             <Button
-                android:id="@+id/delete_photo_button"
+                android:id="@+id/add_photo_button"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:textAllCaps="false" />
 
             <Button
-                android:id="@+id/add_photo_button"
+                android:id="@+id/delete_photo_button"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
