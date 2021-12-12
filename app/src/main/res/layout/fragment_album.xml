@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="5"
-    tools:context=".AlbumFragment">
+    tools:context=".fragments.AlbumFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

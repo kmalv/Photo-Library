@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="6"
-    tools:context=".PhotoFragment">
+    tools:context=".fragments.PhotoFragment">
 
     <TextView
         android:id="@+id/filename_text_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp"
         android:text="@string/default_filename_text"
@@ -22,7 +22,7 @@
         android:id="@+id/photo_image_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="2.5"
         tools:src="@tools:sample/backgrounds/scenic" />
 
     <LinearLayout
@@ -63,83 +63,28 @@
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tag_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4">
+            android:layout_weight="1">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Monday" />
+                android:text="Location" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tuesday" />
+                android:text="People" />
 
         </com.google.android.material.tabs.TabLayout>
 
-        <ScrollView
-            android:id="@+id/tags_scroll_view"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/tags_viewpager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="20dp">
-
-                <TextView
-                    android:id="@+id/location_value_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="15dp"
-                    android:text="@string/location_tag_default_text"
-                    android:textAlignment="center" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/add_people_button"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/add_button_text"
-                        android:textAllCaps="false"
-                        app:icon="@android:drawable/ic_input_add" />
-
-                    <TextView
-                        android:id="@+id/people_text_view"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/people_text_view_text"
-                        android:textAlignment="center"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/delete_people_button"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/delete_button_text"
-                        android:textAllCaps="false"
-                        app:icon="@android:drawable/ic_delete"
-                        app:iconGravity="end" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </ScrollView>
+            android:layout_weight="2" />
 
     </LinearLayout>
 
