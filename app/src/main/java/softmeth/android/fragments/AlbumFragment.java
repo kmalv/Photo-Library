@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.File;
+
 import softmeth.android.R;
 
 public class AlbumFragment extends Fragment {
@@ -32,11 +34,14 @@ public class AlbumFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        String imagePath = result.getData().getData().getPath();
-                        Toast.makeText(view.getContext(), "Image " + imagePath + " successfully loaded", Toast.LENGTH_LONG).show();
-
-                        // Attempt to navigate with path to load photo
+                        // String imagePath = result.getData().getData().getPath();
                         Uri uri = result.getData().getData();
+                        File file = new File(uri.getPath());
+                        String path = file.getAbsolutePath();
+                        Toast.makeText(view.getContext(), "Image " + uri.toString() + " successfully loaded", Toast.LENGTH_LONG).show();
+                        System.out.println(uri.toString());
+                        // Attempt to navigate with path to load photo
+                        // Uri uri = result.getData().getData();
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("uri", uri);
                         Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoFragment, bundle);

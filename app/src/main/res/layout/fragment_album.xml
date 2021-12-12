@@ -15,7 +15,7 @@
         android:contentDescription="@string/all_photos_in_the_current_album_desc"
         tools:itemCount="50"
         tools:layoutManager="GridLayoutManager"
-        tools:listitem="@layout/recycler_view_item_1">
+        tools:listitem="@layout/recycler_view_thumbnail_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 

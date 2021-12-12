@@ -47,7 +47,7 @@ public class Album implements Serializable {
      * Gets this album's number of photos.
      * @return number of photos in the album as an integer
      */
-    protected int getNumPhotos() 
+    public int getNumPhotos()
     {
         if (this.photos == null)
             return 0;
@@ -59,67 +59,16 @@ public class Album implements Serializable {
      * Get the name of this album
      * @return name of this album
      */
-    protected String getName() 
+    public String getName()
     {
         return this.name;
-    }
-
-    /**
-     * Gets the date of the photo with the earliest
-     * modification date in the album
-     * @return {@code earliest} date in MMM dd YYYY format
-     */
-    protected String getEarliestDateString() 
-    {
-        List<LocalDateTime> list = this.getDatesOfAllPhotos();
-        if (list == null)
-            return "(null)";
-        if (list.size() < 0)
-            return "(null)";
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd YYYY");
-
-        return list.get(0).format(format);
-    }
-
-    /**
-     * Gets the date of the photo with the latest
-     * modification date in the album
-     * @return {@code latest} date in MMM dd YYYY format
-     */
-    protected String getLatestDateString() 
-    {
-        List<LocalDateTime> list = this.getDatesOfAllPhotos();
-        if (list == null)
-            return "null";
-        if (list.size() < 0)
-            return "null";
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd YYYY");
-
-        return list.get(list.size() -1).format(format);
-    }
-
-    
-    /** 
-     * Gets the LocalDateTime instances of all photos
-     * in this album
-     * @return List<LocalDateTime>
-     */
-    private List<LocalDateTime> getDatesOfAllPhotos()
-    {
-        List<LocalDateTime> dates = this.photos
-                                        .stream()
-                                        .map(Photo::getLastModifiedDateAsTime)
-                                        .sorted()
-                                        .collect(Collectors.toList());
-        
-        return dates;
     }
 
     /** 
      * Gets this album's list of photos
      * @return ArrayList of {@link Photo} objects in this album
      */
-    protected ArrayList<Photo> getPhotos()
+    public ArrayList<Photo> getPhotos()
     {
         return this.photos;
     }
@@ -129,7 +78,7 @@ public class Album implements Serializable {
      * @param photo photo to search for
      * @return reference to the photo, or null if it was not found
      */
-    protected Photo getPhoto(Photo photo)
+    public Photo getPhoto(Photo photo)
     {
         if (photos.contains(photo))
         {
@@ -148,7 +97,7 @@ public class Album implements Serializable {
      * @return {@code true} if photo was successfully added,
      * {@code false} if not.
      */
-    protected boolean addPhoto(Photo photo) 
+    public boolean addPhoto(Photo photo)
     {
         if (photo == null)
             return false;
@@ -169,7 +118,7 @@ public class Album implements Serializable {
      * @return {@code true} if <em>all</em> photos were successfully added,
      * {@code false} if not.
      */
-    protected boolean addPhoto(ArrayList<Photo> photosToAdd)
+    public boolean addPhoto(ArrayList<Photo> photosToAdd)
     {
         if (photosToAdd == null)
             return false;
@@ -219,14 +168,14 @@ public class Album implements Serializable {
     {
         if (this.getNumPhotos() == 0)
             return name + " | No photos";
-        return name + " | Photos: " + getNumPhotos() + " | " + this.getEarliestDateString() + " | " + this.getLatestDateString();
+        return name + " | Photos: " + getNumPhotos();
     }
 
     /**
      * Rename this album to newName
      * @param newName   the new name of the album
      */
-    protected void setName(String newName) {
+    public void setName(String newName) {
         this.name = newName;
     }
 
@@ -237,7 +186,7 @@ public class Album implements Serializable {
      * @return {@code true} if photo was successfully deleted, 
      * {@code false} if not
      */
-    protected boolean deletePhoto(Photo photo) {
+    public boolean deletePhoto(Photo photo) {
             photos.remove(photo);
             return true;
     }

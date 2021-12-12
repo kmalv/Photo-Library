@@ -1,5 +1,8 @@
 package softmeth.android.models;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
@@ -18,18 +21,18 @@ import java.util.ArrayList;
  * @author <em>ey150</em>  - Ernest Yakobchuk
  */
 public class Photo implements Serializable {
-    private String         path;
+    private Bitmap         image;
     private String         caption;
     private ArrayList<Tag> tags;
 
     /**
      * Constructor of a Photo instance given only the path of
      * the photo. Caption and tags default to empty
-     * @param path path of the image file
+     * @param uri path of the image file
      */
-    public Photo(String path)
+    public Photo(Bitmap image)
     {
-        this.path     = path;
+        this.image     = image;
         this.caption  = null;
         this.tags     = new ArrayList<Tag>();
     }
@@ -39,16 +42,25 @@ public class Photo implements Serializable {
      * Gets the path of this photo
      * @return the path as a String
      */
-    protected String getPath()
+//    public String getPath()
+//    {
+//        return this.uri.toString();
+//    }
+
+    /**
+     * Gets the Bitmap associated with the photo
+     * @return Bitmap of the image
+     */
+    public Bitmap getImage()
     {
-        return this.path.toString();
+        return this.image;
     }
 
     /** 
      * Sets the caption of this photo
      * @param caption desired caption for the photo
      */
-    protected void setCaption(String caption)
+    public void setCaption(String caption)
     {
         this.caption = caption;
     }
@@ -57,7 +69,7 @@ public class Photo implements Serializable {
      * Gets the caption of this photo
     * @return the caption of this photo as a String
      */
-    protected String getCaption()
+    public String getCaption()
     {
         return this.caption;
     }
@@ -67,7 +79,7 @@ public class Photo implements Serializable {
      * @return ArrayList of {@link Tag} objects associated
      * with this photo
      */
-    protected ArrayList<Tag> getTags()
+    public ArrayList<Tag> getTags()
     {
         return this.tags;
     }
@@ -85,36 +97,18 @@ public class Photo implements Serializable {
         if (o instanceof Photo)
         {
             Photo p = (Photo) o;
-            if (p.path.equals(this.path))
+            if (p.image.equals(this.image))
                 return true;
         }
         return false;
     }
 
-    protected String getLastModifiedDate()
+/*    public FileInputStream getStream()
     {
-        File          file = new File(path);
-        LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault());
-        
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd YYYY hh:mm a");
-
-        return date.format(format);
-    }
-
-    protected LocalDateTime getLastModifiedDateAsTime()
-    {
-        File          file = new File(path);
-        LocalDateTime date = LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault());
-        
-        return date;
-    }
-
-    protected FileInputStream getStream()
-    {
-        String path = this.path;
+        Uri uri = this.uri;
         try
         {
-            FileInputStream is = new FileInputStream(path);
+            FileInputStream is = new FileInputStream(uri.getPath());
             return is;
         }
         catch (Exception e)
@@ -122,5 +116,5 @@ public class Photo implements Serializable {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 }
