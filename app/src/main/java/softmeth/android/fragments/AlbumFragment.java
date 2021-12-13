@@ -1,7 +1,11 @@
 package softmeth.android.fragments;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,12 +19,16 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 
 import softmeth.android.R;
+import softmeth.android.models.Loader;
+import softmeth.android.models.Photo;
 
 public class AlbumFragment extends Fragment {
     @Override
@@ -36,10 +44,20 @@ public class AlbumFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // String imagePath = result.getData().getData().getPath();
                         Uri uri = result.getData().getData();
-                        File file = new File(uri.getPath());
-                        String path = file.getAbsolutePath();
-                        Toast.makeText(view.getContext(), "Image " + uri.toString() + " successfully loaded", Toast.LENGTH_LONG).show();
-                        System.out.println(uri.toString());
+                        ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), uri);
+
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = ImageDecoder.decodeBitmap(source);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        Photo photo = new Photo(bitmap);
+
+                        Loader.getUser().getAlbum(0).addPhoto(photo);
+                        Loader.saveUser(getContext());
+
                         // Attempt to navigate with path to load photo
                         // Uri uri = result.getData().getData();
                         Bundle bundle = new Bundle();

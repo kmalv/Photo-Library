@@ -109,39 +109,6 @@ public class Album implements Serializable {
 
         return true;
     }
-    
-    /** 
-     * Adds an ArrayList of phots to this album's list of photos. Duplicates 
-     * are not allowed, and this album's {@code latest} date will be changed
-     * to the date/time of the addition.
-     * @param photo {@link Photo} instance to be added
-     * @return {@code true} if <em>all</em> photos were successfully added,
-     * {@code false} if not.
-     */
-    public boolean addPhoto(ArrayList<Photo> photosToAdd)
-    {
-        if (photosToAdd == null)
-            return false;
-        // Check if album has a photo in photosToAdd already
-        boolean hasDuplicate = false;    
-        for (Photo p : photos)
-        {
-            if (photosToAdd.contains(p))
-            {
-                hasDuplicate = true;
-                break;
-            }
-        }
-
-        if (hasDuplicate)
-            return false;
-        else
-        {
-            photos.addAll(photosToAdd);
-
-            return true;
-        }
-    }
 
     /** 
      * @return {@code true} if this and o are both Albums and

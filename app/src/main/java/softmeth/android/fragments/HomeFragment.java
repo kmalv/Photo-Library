@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import softmeth.android.R;
 import softmeth.android.adapters.AlbumItemAdapter;
 import softmeth.android.models.Album;
+import softmeth.android.models.Loader;
 import softmeth.android.models.Photo;
+import softmeth.android.models.User;
 
 public class HomeFragment extends Fragment {
     @Override
@@ -37,10 +39,11 @@ public class HomeFragment extends Fragment {
 
         ArrayList<Album> testAlbumList = new ArrayList<Album>();
         testAlbumList.add(testAlbum);*/
+        Loader.getUser().addAlbum(new Album("test"));
 
         // Set up recycler view
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.album_recyclerview);
-        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(null);
+        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(Loader.getUser().getAlbums());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);

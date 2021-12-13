@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import softmeth.android.MainActivity;
 import softmeth.android.R;
 import softmeth.android.models.Album;
 
@@ -69,11 +71,22 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        String caption = localDataSet.get(position).toString();
-        Bitmap image = localDataSet.get(position).getPhotos().get(0).getImage();
+        if (localDataSet == null)
+            Toast.makeText(viewHolder.thumbnail.getContext(), "Empty Album list", Toast.LENGTH_LONG).show();
+        else
+        {
+            System.out.println(localDataSet.isEmpty());
+            if (!localDataSet.isEmpty())
+            {
+                String caption = localDataSet.get(position).toString();
+                Bitmap image = localDataSet.get(position).getPhotos().get(0).getImage();
 
-        viewHolder.getTextView().setText(caption);
-        viewHolder.getImageView().setImageBitmap(image);
+                viewHolder.getTextView().setText(caption);
+                viewHolder.getImageView().setImageBitmap(image);
+            }
+            else
+                Toast.makeText(viewHolder.thumbnail.getContext(), "Empty album", Toast.LENGTH_LONG).show();
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

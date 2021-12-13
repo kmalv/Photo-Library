@@ -1,8 +1,10 @@
 package softmeth.android.models;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
@@ -28,7 +30,6 @@ public class Photo implements Serializable {
     /**
      * Constructor of a Photo instance given only the path of
      * the photo. Caption and tags default to empty
-     * @param uri path of the image file
      */
     public Photo(Bitmap image)
     {
@@ -101,6 +102,54 @@ public class Photo implements Serializable {
                 return true;
         }
         return false;
+    }
+
+
+    private void writeObject(java.io.ObjectOutputStream out)
+    {
+        try
+        {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+            byte[] byteArray = stream.toByteArray();
+
+            out.writeInt(byteArray.length);
+            out.write(byteArray);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+    {
+        try
+        {
+            int bufferLength = in.readInt();
+
+            byte[] byteArray = new byte[bufferLength];
+
+            int pos = 0;
+            do {
+                int read = in.read(byteArray, pos, bufferLength - pos);
+
+                if (read != -1) {
+                    pos += read;
+                } else {
+                    break;
+                }
+
+            } while (pos < bufferLength);
+
+            image = BitmapFactory.decodeByteArray(byteArray, 0, bufferLength);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
 /*    public FileInputStream getStream()
