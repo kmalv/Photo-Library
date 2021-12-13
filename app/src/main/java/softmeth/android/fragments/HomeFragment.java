@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,8 +21,6 @@ import softmeth.android.R;
 import softmeth.android.adapters.AlbumItemAdapter;
 import softmeth.android.models.Album;
 import softmeth.android.models.Loader;
-import softmeth.android.models.Photo;
-import softmeth.android.models.User;
 
 public class HomeFragment extends Fragment {
     @Override
@@ -29,32 +29,59 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-/*        // TODO: delete this, it's just for testing
-        Photo testPhoto = new Photo(Uri.parse("content://com.android.providers.media.documents/document/image%3A33"));
-
-        ArrayList<Photo> testList = new ArrayList<Photo>();
-        testList.add(testPhoto);
-
-        Album testAlbum = new Album("test", testList);
-
-        ArrayList<Album> testAlbumList = new ArrayList<Album>();
-        testAlbumList.add(testAlbum);*/
+        // Get the user's albums
         Loader.getUser().addAlbum(new Album("test"));
 
         // Set up recycler view
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.album_recyclerview);
-        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(Loader.getUser().getAlbums());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(getContext(), Loader.getUser().getAlbums());
 
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(albumItemAdapter);
 
-        // Create onClickListener for opening the selected album
+        // Open button listener
         Button openButton = (Button) view.findViewById(R.id.open_button);
         openButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View view)
+            {
+                System.out.println("HELLO");
+                if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
+                    Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_albumFragment);
+                else
+                    Toast.makeText(getContext(), "No album was selected. Please select an album to open.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Rename button listener
+        Button renameButton = (Button) view.findViewById(R.id.rename_button);
+        renameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+
+                if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
+                    return;
+                else
+                    Toast.makeText(getContext(), "No album was selected. Please select an album to rename.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Delete button listener
+        Button deleteButton = (Button) view.findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_albumFragment);
+
+                if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
+                {
+                    if (Loader.deleteAlbum(albumItemAdapter.getSelectedIndex()))
+                        albumItemAdapter.notifyDataSetChanged();
+                    else
+                        Toast.makeText(getContext(), "Could not delete album. Please try again.", Toast.LENGTH_LONG).show();
+                }
+                else
+                    Toast.makeText(getContext(), "No album was selected. Please select an album to open.", Toast.LENGTH_LONG).show();
             }
         });
 

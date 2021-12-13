@@ -53,7 +53,20 @@ public class User implements Serializable{
 
     public Album getAlbum(int index)
     {
+        if (albums == null)
+            return null;
+        if (albums.isEmpty())
+            return null;
         return albums.get(index);
+    }
+
+    protected boolean deleteAlbum(int index)
+    {
+        Album toDelete = getAlbum(index);
+        if (toDelete == null)
+            return false;
+        albums.remove(index);
+        return true;
     }
 
     /**

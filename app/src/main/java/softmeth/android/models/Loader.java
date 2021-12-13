@@ -60,4 +60,13 @@ public class Loader {
     {
         return user;
     }
+
+    public static boolean deleteAlbum(int index)
+    {
+        if (user == null)
+            return false;
+        boolean caca = user.deleteAlbum(index);
+        System.out.println(caca);
+        return caca;
+    }
 }
