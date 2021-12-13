@@ -12,11 +12,13 @@ import java.util.ArrayList;
 
 public class Loader {
     private static final String filename = "info.data";
+    private static Context context;
     private static User user;
 
     // Loads user info from info.data file
-    public static void loadUser(Context context)
+    public static void loadUser(Context passedContext)
     {
+        context = passedContext;
         try
         {
             FileInputStream in = context.openFileInput(filename);
@@ -38,7 +40,7 @@ public class Loader {
         }
     }
 
-    public static void saveUser(Context context)
+    public static void saveUser()
     {
         try
         {
@@ -65,8 +67,23 @@ public class Loader {
     {
         if (user == null)
             return false;
-        boolean caca = user.deleteAlbum(index);
-        System.out.println(caca);
-        return caca;
+        boolean deleted = user.deleteAlbum(index);
+        if (deleted)
+            saveUser();
+        return deleted;
+    }
+
+    public static boolean renameAlbum(int index, String newName)
+    {
+        if (user == null)
+            return false;
+        Album album = user.getAlbum(index);
+        if (album != null)
+        {
+            album.setName(newName);
+            saveUser();
+            return true;
+        }
+        return false;
     }
 }

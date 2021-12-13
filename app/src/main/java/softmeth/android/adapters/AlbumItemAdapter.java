@@ -113,13 +113,13 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (selectedIndex == viewHolder.getAdapterPosition())
+                        if (selectedIndex == pos)
                         {
                             selectedIndex = RecyclerView.NO_POSITION;
                             notifyDataSetChanged();
                             return;
                         }
-                        selectedIndex = viewHolder.getAdapterPosition();
+                        selectedIndex = pos;
                         notifyItemChanged(pos);
                     }
                 });

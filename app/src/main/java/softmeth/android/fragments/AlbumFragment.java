@@ -56,7 +56,7 @@ public class AlbumFragment extends Fragment {
                         Photo photo = new Photo(bitmap);
 
                         Loader.getUser().getAlbum(0).addPhoto(photo);
-                        Loader.saveUser(getContext());
+                        Loader.saveUser();
 
                         // Attempt to navigate with path to load photo
                         // Uri uri = result.getData().getData();

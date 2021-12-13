@@ -29,6 +29,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // TODO: Delete this whenever we are done implementing serialization logic
         // Get the user's albums
         Loader.getUser().addAlbum(new Album("test"));
 
@@ -45,7 +46,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                System.out.println("HELLO");
                 if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
                     Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_albumFragment);
                 else
@@ -59,9 +59,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-
                 if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
-                    return;
+                {
+                    if (Loader.renameAlbum(albumItemAdapter.getSelectedIndex(), "TEST_RENAME"))
+                        albumItemAdapter.notifyDataSetChanged();
+                    else
+                        Toast.makeText(getContext(), "Could not rename album. Please try again.", Toast.LENGTH_LONG).show();
+
+                }
                 else
                     Toast.makeText(getContext(), "No album was selected. Please select an album to rename.", Toast.LENGTH_SHORT).show();
             }
