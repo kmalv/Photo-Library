@@ -3,29 +3,23 @@ package softmeth.android.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import softmeth.android.MainActivity;
 import softmeth.android.R;
 import softmeth.android.models.Album;
+import softmeth.android.models.Photo;
 
-public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.ViewHolder> {
+public class ThumbnailItemAdapter extends RecyclerView.Adapter<ThumbnailItemAdapter.ViewHolder> {
 
-    private final ArrayList<Album> localDataSet;
+    private final ArrayList<Photo> localDataSet;
     private final Context context;
     private int selectedIndex = RecyclerView.NO_POSITION;
 
@@ -35,7 +29,7 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
      * @param dataSet String[] containing the data to populate views to be used
      * by RecyclerView.
      */
-    public AlbumItemAdapter(Context context, ArrayList<Album> dataSet) {
+    public ThumbnailItemAdapter(Context context, ArrayList<Photo> dataSet) {
         this.context = context;
         this.localDataSet = dataSet;
     }
@@ -45,7 +39,6 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView caption;
         private final ImageView thumbnail;
 
         public ViewHolder(View view) {
@@ -54,12 +47,7 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
             // To allow each item to be clicked
             view.setClickable(true);
 
-            caption = (TextView) view.findViewById(R.id.album_caption_text_view);
             thumbnail = (ImageView) view.findViewById(R.id.album_thumbnail);
-        }
-
-        public TextView getTextView() {
-            return caption;
         }
 
         public ImageView getImageView() {
@@ -69,17 +57,17 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ThumbnailItemAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycler_view_album_item, viewGroup, false);
+                .inflate(R.layout.recycler_view_thumbnail_item, viewGroup, false);
 
-        return new ViewHolder(view);
+        return new ThumbnailItemAdapter.ViewHolder(view);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(ThumbnailItemAdapter.ViewHolder viewHolder, final int position) {
         // to prevent "do not treat position as fixed" error
         int pos = viewHolder.getAdapterPosition();
 
@@ -89,22 +77,19 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
         else if (localDataSet.isEmpty())
             System.out.println("Empty localDataSet");
         else {
-            // Ensure there is actually data inside the album
+            // Ensure there is actually a photo inside the arraylist
             if (localDataSet.get(pos) != null)
             {
-                String caption = localDataSet.get(pos).toString();
                 Bitmap image = null;
 
                 // Ensure there are actually photos in the album
-                if (!localDataSet.get(pos).getPhotos().isEmpty())
-                    image = localDataSet.get(pos).getPhotos().get(0).getImage();
+                if (localDataSet.get(pos).getImage() != null)
+                    image = localDataSet.get(pos).getImage();
                 else
-                    System.out.println("Album at position " + pos + " has no photos.");
+                    System.out.println("Photo at position " + pos + " has no Bitmap.");
 
-                viewHolder.getTextView().setText(caption);
                 viewHolder.getImageView().setImageBitmap(image);
 
-                // Makes all items that aren't selected have a white background
                 if (selectedIndex != pos)
                     viewHolder.itemView.setBackgroundColor(Color.argb(100, 255, 255, 255));
 
@@ -112,14 +97,12 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // Handles unclicking a clicked item
                         if (selectedIndex == pos)
                         {
                             selectedIndex = RecyclerView.NO_POSITION;
                             notifyDataSetChanged();
                             return;
                         }
-                        // If item is clicked, we want to change its color to show it's selected
                         selectedIndex = pos;
                         viewHolder.itemView.setBackgroundColor(Color.argb(100, 235, 235, 235));
                         notifyDataSetChanged();

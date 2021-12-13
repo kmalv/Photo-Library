@@ -18,4 +18,6 @@
     <string name="clear_button_text">Clear</string>
     <string name="location_tag_default_text">(No location value specified)</string>
     <string name="empty_location_tag_text">(No location tag specified)</string>
+    <string name="move_button_text">Move</string>
+    <string name="open_selected_photo_button_text">Open selected photo...</string>
 </resources>

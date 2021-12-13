@@ -15,6 +15,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,15 +29,28 @@ import java.io.File;
 import java.io.IOException;
 
 import softmeth.android.R;
+import softmeth.android.adapters.ThumbnailItemAdapter;
 import softmeth.android.models.Loader;
 import softmeth.android.models.Photo;
 
 public class AlbumFragment extends Fragment {
+    private final int SPAN_COUNT = 2;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_album, container, false);
+
+        // Get the bundle with the album to open
+        Bundle bundle = getArguments();
+        int index = bundle.getInt("index");
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.thumbnail_recyclerview);
+        ThumbnailItemAdapter thumbnailItemAdapter = new ThumbnailItemAdapter(getContext(), Loader.getPhotosFromAlbum(index));
+
+        recyclerView.setAdapter(thumbnailItemAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), SPAN_COUNT));
 
         // For handling the image picker
         ActivityResultLauncher<Intent> imagePicker = registerForActivityResult(
@@ -60,9 +75,9 @@ public class AlbumFragment extends Fragment {
 
                         // Attempt to navigate with path to load photo
                         // Uri uri = result.getData().getData();
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("uri", uri);
-                        Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoFragment, bundle);
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putParcelable("uri", uri);
+                        Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoFragment, bundle2);
                     }
                 });
 

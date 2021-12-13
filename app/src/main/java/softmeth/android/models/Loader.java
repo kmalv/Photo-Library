@@ -86,4 +86,17 @@ public class Loader {
         }
         return false;
     }
+
+    public static Album getAlbum(int index)
+    {
+        return user.getAlbum(index);
+    }
+
+    public static ArrayList<Photo> getPhotosFromAlbum(int index)
+    {
+        Album album = user.getAlbum(index);
+        if (album != null)
+            return album.getPhotos();
+        return null;
+    }
 }

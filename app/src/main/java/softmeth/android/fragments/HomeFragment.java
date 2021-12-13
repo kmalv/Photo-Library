@@ -46,8 +46,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
-                    Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_albumFragment);
+                int index = albumItemAdapter.getSelectedIndex();
+                if (albumItemAdapter.getItemCount() != 0 && index != -1)
+                {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("index", index);
+                    Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_albumFragment, bundle);
+                }
                 else
                     Toast.makeText(getContext(), "No album was selected. Please select an album to open.", Toast.LENGTH_SHORT).show();
             }

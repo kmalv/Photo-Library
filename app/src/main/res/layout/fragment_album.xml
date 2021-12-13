@@ -9,13 +9,13 @@
     tools:context=".fragments.AlbumFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/thumbnail_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
         android:contentDescription="@string/all_photos_in_the_current_album_desc"
         tools:itemCount="50"
-        tools:layoutManager="GridLayoutManager"
-        tools:listitem="@layout/recycler_view_thumbnail_item">
+        tools:listitem="@layout/recycler_view_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -30,7 +30,7 @@
             android:id="@+id/buttons_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="2">
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/add_photo_button"
@@ -38,7 +38,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Add"
+                android:text="@string/add_button_text"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/move_photo_button"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/move_button_text"
                 android:textAllCaps="false" />
 
             <Button
@@ -47,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Delete"
+                android:text="@string/delete_button_text"
                 android:textAllCaps="false" />
 
         </LinearLayout>
@@ -57,7 +66,7 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Open selected photo..."
+            android:text="@string/open_selected_photo_button_text"
             android:textAllCaps="false" />
 
     </LinearLayout>
