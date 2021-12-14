@@ -102,6 +102,22 @@ public class AlbumFragment extends Fragment {
             }
         });
 
+        // Delete button listener
+        Button deleteButton = (Button) view.findViewById(R.id.delete_photo_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if (false)
+                {
+                    //if photo selected, delete photo
+
+                }
+                else
+                    Toast.makeText(getContext(), "No photo was selected. Please select an photo to delete.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return view;
     }
 }
