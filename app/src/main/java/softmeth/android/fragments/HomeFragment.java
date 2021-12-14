@@ -93,6 +93,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Search button listener
+        Button searchButton = (Button) view.findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {   // Bring up search page only if there is at least one tag attached to a photo
+                if (true)
+                    Navigation.findNavController(view).navigate(R.id.searchFragment);
+                else
+                    Toast.makeText(getContext(), "No tags available to search.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return view;
     }
 }
