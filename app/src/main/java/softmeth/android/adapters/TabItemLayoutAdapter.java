@@ -1,5 +1,7 @@
 package softmeth.android.adapters;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -9,10 +11,12 @@ import softmeth.android.fragments.LocationTagFragment;
 import softmeth.android.fragments.PersonTagFragment;
 
 public class TabItemLayoutAdapter extends FragmentStateAdapter {
-    String[] titles = { "Location", "People" };
+    private String[] titles = { "Location", "People" };
+    private Bundle bundle;
 
-    public TabItemLayoutAdapter(FragmentActivity fragmentActivity) {
+    public TabItemLayoutAdapter(FragmentActivity fragmentActivity, Bundle bundle) {
         super(fragmentActivity);
+        this.bundle = bundle;
     }
 
     @NonNull
@@ -21,9 +25,19 @@ public class TabItemLayoutAdapter extends FragmentStateAdapter {
         switch(position)
         {
             case 0:
-                return new LocationTagFragment();
+            {
+                LocationTagFragment locationTagFragment = new LocationTagFragment();
+                locationTagFragment.setArguments(bundle);
+
+                return locationTagFragment;
+            }
             case 1:
-                return new PersonTagFragment();
+            {
+                PersonTagFragment personTagFragment = new PersonTagFragment();
+                personTagFragment.setArguments(bundle);
+
+                return personTagFragment;
+            }
         }
         return new LocationTagFragment();
     }

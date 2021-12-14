@@ -3,12 +3,15 @@ package softmeth.android.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -16,12 +19,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import softmeth.android.MainActivity;
 import softmeth.android.R;
 import softmeth.android.adapters.TabItemLayoutAdapter;
+import softmeth.android.models.Loader;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PhotoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PhotoFragment extends Fragment {
     String[] titles = { "Location", "People" };
 
@@ -36,21 +35,28 @@ public class PhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_photo, container, false);
 
-        // Set image (if one was passed)
-        if (getArguments() != null) {
-            ImageView currentPhoto = view.findViewById(R.id.photo_image_view);
-            currentPhoto.setImageURI(getArguments().getParcelable("uri"));
-        }
+        // Get arguments
+        Bundle bundle = getArguments();
+        int albumIndex = bundle.getInt("albumIndex");
+        int photoIndex = bundle.getInt("photoIndex");
+
+        // Set the image and filename
+        ImageView photoImage = (ImageView) view.findViewById(R.id.photo_image_view);
+        photoImage.setImageBitmap(Loader.getPhotoFromAlbum(albumIndex, photoIndex).getImage());
+
+        System.out.println(Loader.getPhotoFromAlbum(albumIndex, photoIndex).getFilename());
+
+        TextView filenameTextView = (TextView) view.findViewById(R.id.filename_text_view);
+        filenameTextView.setText(Loader.getPhotoFromAlbum(albumIndex, photoIndex).getFilename());
 
         // Set layout of the tab
-        TabLayout tabLayout = view.findViewById(R.id.tag_tab_layout);
-        ViewPager2 viewPager = view.findViewById(R.id.tags_viewpager);
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tag_tab_layout);
+        ViewPager2 viewPager = (ViewPager2) view.findViewById(R.id.tags_viewpager);
 
-        final TabItemLayoutAdapter adapter = new TabItemLayoutAdapter(getActivity());
+        final TabItemLayoutAdapter adapter = new TabItemLayoutAdapter(getActivity(), bundle);
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager, ((tab, position) -> tab.setText(titles[position]))).attach();
-
 
         return view;
     }

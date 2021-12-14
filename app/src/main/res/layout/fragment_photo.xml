@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="6"
+    android:weightSum="5"
     tools:context=".fragments.PhotoFragment">
 
     <TextView
@@ -31,36 +31,6 @@
         android:layout_weight="3"
         android:orientation="vertical"
         android:weightSum="5">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingHorizontal="20dp">
-
-            <Button
-                android:id="@+id/previous_photo_button"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/previous_button_text"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                app:icon="@android:drawable/ic_media_rew" />
-
-            <Button
-                android:id="@+id/next_photo_button"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/next_button_text"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                app:icon="@android:drawable/ic_media_ff"
-                app:iconGravity="start|textStart" />
-        </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tag_tab_layout"

@@ -3,16 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:weightSum="5"
     tools:context=".fragments.AlbumFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/thumbnail_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:contentDescription="@string/all_photos_in_the_current_album_desc"
         tools:itemCount="50"
         tools:listitem="@layout/recycler_view_item">
@@ -21,8 +20,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:orientation="vertical"
         android:paddingHorizontal="20dp">
 
@@ -38,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="openButtonClick"
                 android:text="@string/add_button_text"
                 android:textAllCaps="false" />
 

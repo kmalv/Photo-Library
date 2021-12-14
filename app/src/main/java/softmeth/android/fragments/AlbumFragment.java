@@ -3,14 +3,12 @@ package softmeth.android.fragments;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
@@ -18,20 +16,18 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.IOException;
 
 import softmeth.android.R;
 import softmeth.android.adapters.ThumbnailItemAdapter;
 import softmeth.android.models.Loader;
-import softmeth.android.models.Photo;
 
 public class AlbumFragment extends Fragment {
     private final int SPAN_COUNT = 2;
@@ -57,41 +53,16 @@ public class AlbumFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        // String imagePath = result.getData().getData().getPath();
-                        Uri uri = result.getData().getData();
-                        ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), uri);
-
-                        Bitmap bitmap = null;
-                        try {
-                            bitmap = ImageDecoder.decodeBitmap(source);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        Photo photo = new Photo(bitmap);
-
-                        Loader.getUser().getAlbum(0).addPhoto(photo);
-                        Loader.saveUser();
-
-                        // Attempt to navigate with path to load photo
-                        // Uri uri = result.getData().getData();
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putParcelable("uri", uri);
-                        Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoFragment, bundle2);
+                        // if photo was successfully added we need to update the recycler view
+                        if (addPhotoFromURI(index, result.getData().getData()))
+                            thumbnailItemAdapter.notifyDataSetChanged();
+                        else
+                            Toast.makeText(getContext(), "Could not add photo to this album", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        // Create onClickListener for opening the selected photo
-        Button openButton = view.findViewById(R.id.open_photo_button);
-        openButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoFragment);
-            }
-        });
-
         // Open user's Gallery and prompt them to add a photo
-        Button addButton = view.findViewById(R.id.add_photo_button);
+        Button addButton = (Button) view.findViewById(R.id.add_photo_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +73,74 @@ public class AlbumFragment extends Fragment {
             }
         });
 
+        // Open button listener
+        Button openButton = (Button) view.findViewById(R.id.open_photo_button);
+        openButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int selected = thumbnailItemAdapter.getSelectedIndex();
+                if (thumbnailItemAdapter.getItemCount() != 0 && selected != RecyclerView.NO_POSITION)
+                {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("albumIndex", index);
+                    bundle.putInt("photoIndex", selected);
+
+                    Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoViewPagerFragment, bundle);
+                }
+                else
+                    Toast.makeText(getContext(), "No photo was selected. Please select a photo to open.", Toast.LENGTH_SHORT);
+            }
+        });
+
+        // Move  button listener
+
+        // Delete button listener
+        Button deleteButton = (Button) view.findViewById(R.id.delete_photo_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                int selected = thumbnailItemAdapter.getSelectedIndex();
+                if (thumbnailItemAdapter.getItemCount() != 0 && selected != -1)
+                {
+                    if (Loader.deletePhotoFromAlbum(index, selected))
+                        thumbnailItemAdapter.notifyDataSetChanged();
+                    else
+                        Toast.makeText(getContext(), "Could not delete photo. Please try again.", Toast.LENGTH_LONG).show();
+                }
+                else
+                    Toast.makeText(getContext(), "No photo was selected. Please select an photo to open.", Toast.LENGTH_LONG).show();
+            }
+        });
+
         return view;
+    }
+
+    // Adds a photo to the album given the album index and a URI
+    private boolean addPhotoFromURI(int index, Uri uri)
+    {
+        ImageDecoder.Source source = ImageDecoder.createSource(getActivity().getContentResolver(), uri);
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = ImageDecoder.decodeBitmap(source);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return Loader.addPhotoToAlbum(index, bitmap, getFileNameFromURI(uri));
+    }
+
+    // Given a uri, returns the filename (title) of the image
+    private String getFileNameFromURI(Uri uri)
+    {
+        ContentResolver contentResolver = getActivity().getApplicationContext().getContentResolver();
+        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+
+        int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        cursor.moveToFirst();
+        String temp = new String(cursor.getString(nameIndex));
+
+        return (temp == null) ? "(Could not get filename)" : temp;
     }
 }

@@ -1,6 +1,7 @@
 package softmeth.android.models;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ import java.util.stream.Collectors;
  * @author <em>ey150</em>  - Ernest Yakobchuk
  */
 public class Album implements Serializable {
-    private String        name;
-    ArrayList<Photo>      photos;
+    private String                name;
+    private ArrayList<Photo>      photos;
 
     /**
      * Constructs an Album instance. Sets the earliest and latest 
@@ -28,7 +29,7 @@ public class Album implements Serializable {
     public Album(String name, ArrayList<Photo> photos)
     {
         this.name     = name;
-        this.photos   = photos;
+        this.photos   = new ArrayList<Photo>();
     }
 
     /**
@@ -80,13 +81,20 @@ public class Album implements Serializable {
      */
     public Photo getPhoto(Photo photo)
     {
-        if (photos.contains(photo))
+        if (this.photos.contains(photo))
         {
-            int index = photos.indexOf(photo);
+            int index = this.photos.indexOf(photo);
 
-            return photos.get(index);
+            return this.photos.get(index);
         }
         return null;
+    }
+
+    protected Photo getPhoto(int index)
+    {
+        if (this.photos.size() <= index)
+            return null;
+        return this.photos.get(index);
     }
 
     /** 
@@ -101,11 +109,10 @@ public class Album implements Serializable {
     {
         if (photo == null)
             return false;
-        if (photos.contains(photo))
+        if (this.photos.contains(photo))
             return false;
-        // Add photo to album and change this album's
-        // most recently modified date value
-        photos.add(photo);
+        // Add photo to album
+        this.photos.add(photo);
 
         return true;
     }
@@ -117,6 +124,8 @@ public class Album implements Serializable {
     @Override
     public boolean equals(Object o)
     {
+        if (o == null)
+            return false;
         if (o instanceof Album)
         {
             Album a = (Album) o;
@@ -127,8 +136,7 @@ public class Album implements Serializable {
 
     /** 
      * @return String in the format {@code <album name> | <number of
-     * photos> | <earliest date in MMM dd YYYY format> | <latest
-     * date in MMM dd YYYY format>}
+     * photos>}
      */
     @Override
     public String toString()
@@ -154,7 +162,7 @@ public class Album implements Serializable {
      * {@code false} if not
      */
     public boolean deletePhoto(Photo photo) {
-            photos.remove(photo);
+            this.photos.remove(photo);
             return true;
     }
 }

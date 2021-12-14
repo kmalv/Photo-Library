@@ -1,6 +1,7 @@
 package softmeth.android.models;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class Loader {
     private static final String filename = "info.data";
     private static Context context;
-    private static User user;
+    private static User user = null;
 
     // Loads user info from info.data file
     public static void loadUser(Context passedContext)
@@ -25,6 +26,18 @@ public class Loader {
             ObjectInputStream objIn = new ObjectInputStream(in);
 
             user = (User) objIn.readObject();
+
+            // check the data >:(
+            for (Album a : user.getAlbums())
+            {
+                for (Photo p : a.getPhotos())
+                {
+                    System.out.println("bitmap null: " + p.getImage());
+                    System.out.println("name: " + p.getFilename());
+                    System.out.println("tags: " + p.getTags());
+
+                }
+            }
 
             in.close();
             objIn.close();
@@ -40,7 +53,7 @@ public class Loader {
         }
     }
 
-    public static void saveUser()
+    private static void saveUser()
     {
         try
         {
@@ -67,10 +80,63 @@ public class Loader {
     {
         if (user == null)
             return false;
-        boolean deleted = user.deleteAlbum(index);
-        if (deleted)
+        if (user.getAlbum(index) == null)
+            return false;
+        else
+        {
+            // If photo only exists in the album to be deleted,
+            // we need to delete it
+            for (Photo p : user.getAlbum(index).getPhotos())
+            {
+                boolean hasDupes = false;
+
+                // Check every album for if it has the photo
+                for (Album a : user.getAlbums())
+                {
+                    if (a.getPhotos().contains(p))
+                        hasDupes = true;
+                    break;
+                }
+                // Photo does not exist in any other album
+                if (!hasDupes)
+                    user.getPhotoBank().remove(p);
+            }
+
+            // Finally, delete the album and save the changes
+            user.getAlbums().remove(user.getAlbum(index));
             saveUser();
-        return deleted;
+            return true;
+        }
+    }
+
+    public static boolean deletePhotoFromAlbum(int albumIndex, int photoIndex)
+    {
+        // first make sure the photo's even in the album
+        if (user.getAlbum(albumIndex) != null)
+        {
+            Album album = user.getAlbum(albumIndex);
+            // Then check that photo exists in the album
+            if (album.getPhoto(photoIndex) != null)
+            {
+                Photo photo = album.getPhoto(photoIndex);
+
+                // Photo probably only exists in this one album
+                if (user.numberOfAlbumsPhotoIsIn(photo) == 1)
+                {
+                    user.getPhotoBank().remove(photo);
+                    user.getAlbum(albumIndex).getPhotos().remove(photo);
+                    saveUser();
+                    return true;
+                }
+                else
+                {
+                    user.getAlbum(albumIndex).getPhotos().remove(photo);
+                    saveUser();
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static boolean renameAlbum(int index, String newName)
@@ -78,8 +144,11 @@ public class Loader {
         if (user == null)
             return false;
         Album album = user.getAlbum(index);
+        // Prevent duplicates
         if (album != null)
         {
+            if (user.getAlbums().contains(new Album((newName))))
+                return false;
             album.setName(newName);
             saveUser();
             return true;
@@ -98,5 +167,67 @@ public class Loader {
         if (album != null)
             return album.getPhotos();
         return null;
+    }
+
+    public static ArrayList<Album> getAlbums()
+    {
+        return user.getAlbums();
+    }
+
+    public static Photo getPhotoFromAlbum(int albumIndex, int photoIndex)
+    {
+        if (user.getAlbum(albumIndex) == null)
+            return null;
+        return user.getAlbum(albumIndex).getPhoto(photoIndex);
+    }
+
+    public static boolean addAlbum(Album album)
+    {
+        if (user.addAlbum(album))
+        {
+            saveUser();
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public static boolean addPhotoToAlbum(int index, Bitmap bitmap, String filename)
+    {
+        Photo photoToAdd = new Photo(bitmap, filename);
+        Album dest = user.getAlbum(index);
+
+        // If photo does not yet exist in the destination album
+        if (dest.getPhoto(photoToAdd) == null)
+        {
+            boolean isInPhotoBank = user.isInPhotoBank(photoToAdd);
+
+            // If photo already exists in some other album
+            if (isInPhotoBank)
+            {
+                // Get that photo instance and add it to the album
+                int indexInPhotoBank = user.getPhotoBank().indexOf(photoToAdd);
+                boolean added = dest.addPhoto(user.getPhotoBank().get(indexInPhotoBank));
+                System.out.println("added " + added);
+                if (added)
+                {
+                    saveUser();
+                    return true;
+                }
+                else
+                    return false;
+            }
+            // Get photoBank instance of the photo, and add it to the album
+            else
+            {
+                user.getPhotoBank().add(photoToAdd);
+                dest.addPhoto(photoToAdd);
+                saveUser();
+
+                return true;
+            }
+        }
+        else
+            return false;
     }
 }

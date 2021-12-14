@@ -67,7 +67,7 @@ public class SearchActions {
      * @return String
      *//*
 
-    public static String getCaption(Photo photo)
+    public static String getFilename(Photo photo)
     {
         ArrayList<Photo> photoBank = getUserPhotoBank();
         if (photoBank == null)
@@ -77,7 +77,7 @@ public class SearchActions {
         
         if (index == -1)
             return "(photo not in photoBank)";
-        return photoBank.get(index).getCaption();    
+        return photoBank.get(index).getFilename();
     }
 
     

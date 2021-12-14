@@ -2,20 +2,13 @@ package softmeth.android.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * Represents a Photo. Each Photo has a name, caption, and a list
+ * Represents a Photo. Each Photo has a name, filename, and a list
  * of Tags. 
  * Contains mostly protected methods
  * to prevent accidental data manipulation.
@@ -24,30 +17,20 @@ import java.util.ArrayList;
  */
 public class Photo implements Serializable {
     private Bitmap         image;
-    private String         caption;
+    private String         filename;
     private ArrayList<Tag> tags;
 
     /**
      * Constructor of a Photo instance given only the path of
      * the photo. Caption and tags default to empty
      */
-    public Photo(Bitmap image)
+    public Photo(Bitmap image, String filename)
     {
         this.image     = image;
-        this.caption  = null;
-        this.tags     = new ArrayList<Tag>();
+        this.filename  = filename;
+        this.tags      = new ArrayList<Tag>();
     }
     
-    
-    /** 
-     * Gets the path of this photo
-     * @return the path as a String
-     */
-//    public String getPath()
-//    {
-//        return this.uri.toString();
-//    }
-
     /**
      * Gets the Bitmap associated with the photo
      * @return Bitmap of the image
@@ -58,21 +41,21 @@ public class Photo implements Serializable {
     }
 
     /** 
-     * Sets the caption of this photo
-     * @param caption desired caption for the photo
+     * Sets the filename of this photo
+     * @param filename desired filename for the photo
      */
-    public void setCaption(String caption)
+    public void setFilename(String filename)
     {
-        this.caption = caption;
+        this.filename = filename;
     }
 
     /** 
-     * Gets the caption of this photo
-    * @return the caption of this photo as a String
+     * Gets the filename of this photo
+    * @return the filename of this photo as a String
      */
-    public String getCaption()
+    public String getFilename()
     {
-        return this.caption;
+        return this.filename;
     }
 
     /** 
@@ -98,7 +81,7 @@ public class Photo implements Serializable {
         if (o instanceof Photo)
         {
             Photo p = (Photo) o;
-            if (p.image.equals(this.image))
+            if (p.filename.equals(this.filename))
                 return true;
         }
         return false;
@@ -109,13 +92,16 @@ public class Photo implements Serializable {
     {
         try
         {
+            // Compress the bitmap before saving it
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
+            this.image.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
 
             out.writeInt(byteArray.length);
             out.write(byteArray);
+
+            out.writeObject(this.filename);
+            out.writeObject(this.tags);
         }
         catch (Exception e)
         {
@@ -128,10 +114,9 @@ public class Photo implements Serializable {
     {
         try
         {
+            // Read the Bitmap bytearray
             int bufferLength = in.readInt();
-
             byte[] byteArray = new byte[bufferLength];
-
             int pos = 0;
             do {
                 int read = in.read(byteArray, pos, bufferLength - pos);
@@ -144,6 +129,9 @@ public class Photo implements Serializable {
 
             } while (pos < bufferLength);
 
+            // Read/save the rest of the fields
+            filename = (String) in.readObject();
+            tags = (ArrayList<Tag>) in.readObject();
             image = BitmapFactory.decodeByteArray(byteArray, 0, bufferLength);
         }
         catch (Exception e)

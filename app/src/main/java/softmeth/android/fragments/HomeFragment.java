@@ -29,13 +29,10 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // TODO: Delete this whenever we are done implementing serialization logic
-        // Get the user's albums
-        Loader.getUser().addAlbum(new Album("test"));
-
+        Loader.addAlbum(new Album("test"));
         // Set up recycler view
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.album_recyclerview);
-        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(getContext(), Loader.getUser().getAlbums());
+        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(getContext(), Loader.getAlbums());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(albumItemAdapter);
@@ -47,10 +44,11 @@ public class HomeFragment extends Fragment {
             public void onClick(View view)
             {
                 int index = albumItemAdapter.getSelectedIndex();
-                if (albumItemAdapter.getItemCount() != 0 && index != -1)
+                if (albumItemAdapter.getItemCount() != 0 && index != RecyclerView.NO_POSITION)
                 {
                     Bundle bundle = new Bundle();
                     bundle.putInt("index", index);
+
                     Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_albumFragment, bundle);
                 }
                 else
@@ -81,8 +79,8 @@ public class HomeFragment extends Fragment {
         Button deleteButton = (Button) view.findViewById(R.id.delete_button);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
                 {
                     if (Loader.deleteAlbum(albumItemAdapter.getSelectedIndex()))

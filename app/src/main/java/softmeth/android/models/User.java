@@ -53,9 +53,7 @@ public class User implements Serializable{
 
     public Album getAlbum(int index)
     {
-        if (albums == null)
-            return null;
-        if (albums.isEmpty())
+        if (albums.size() <= index)
             return null;
         return albums.get(index);
     }
@@ -96,7 +94,41 @@ public class User implements Serializable{
         photoBank.add(photo);
         return true;
     }
-    
+
+    protected boolean isInPhotoBank(Photo photo)
+    {
+        if (getPhotoBank() == null)
+            return false;
+        if (getPhotoBank().isEmpty())
+            return false;
+        else
+            return getPhotoBank().contains(photo);
+    }
+
+    protected int numberOfAlbumsPhotoIsIn(Photo photo)
+    {
+        if (getAlbums().isEmpty())
+            return 0;
+        int count = 0;
+
+        for (Album a : getAlbums())
+        {
+            if (a.getPhoto(photo) != null)
+                count++;
+        }
+
+        return count;
+    }
+
+    protected boolean removePhotoFromPhotoBank(Photo photo)
+    {
+        if (photo == null || this.photoBank.isEmpty())
+            return false;
+        if (!this.photoBank.contains(photo))
+            return false;
+        this.photoBank.remove(photo);
+        return true;
+    }
     /** 
      * Add an album to the user's list of albums. The list is 
      * checked for existing copies before adding.
@@ -105,6 +137,8 @@ public class User implements Serializable{
      * otherwise
      */
     public boolean addAlbum(Album album) {
+        if (album == null)
+            return false;
         if (albums.contains(album))
             return false;
         else {
