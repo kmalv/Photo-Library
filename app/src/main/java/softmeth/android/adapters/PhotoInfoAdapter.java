@@ -23,7 +23,7 @@ public class PhotoInfoAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         PhotoFragment photoFragment = new PhotoFragment();
 
-        // Add new arguments to the fragment which specifies where we are in the
+        // Add new arguments to the fragment which specifies where we are in the list
         Bundle newBundle = new Bundle();
         newBundle.putInt("albumIndex", bundle.getInt("albumIndex"));
         newBundle.putInt("photoIndex", position);

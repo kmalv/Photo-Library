@@ -91,7 +91,7 @@ public class LocationTagFragment extends Fragment {
                         EditText editText = (EditText) d.findViewById(R.id.single_entry_edittext);
                         String newValue = editText.getText().toString();
 
-                        boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "LOCATION", newValue);
+                        boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "LOCATION", newValue.toLowerCase());
                         if (success)
                             locationTextView.setText(Loader.getLocationValue(albumIndex, photoIndex));
                         else

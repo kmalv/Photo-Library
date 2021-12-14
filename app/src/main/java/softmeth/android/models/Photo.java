@@ -70,7 +70,19 @@ public class Photo implements Serializable {
 
     protected boolean addTag(String key, String value)
     {
-        if (this.tags.contains(new Tag(key, value)))
+        // For reseting location value
+        if (key.equals("LOCATION"))
+        {
+            for (Tag t : this.getTags())
+            {
+                System.out.println("KEY: " + t.getKey() + " VAL: " + t.getValue());
+            }
+            if (tags.contains(new Tag(key, value)))
+                return tags.get(tags.indexOf(new Tag(key, value))).setValue(value);
+            else
+                return this.tags.add(new Tag(key, value));
+        }
+        else if (this.tags.contains(new Tag(key, value)))
             return false;
         return this.tags.add(new Tag(key, value));
     }

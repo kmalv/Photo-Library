@@ -66,13 +66,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                if (albumItemAdapter.getItemCount() != 0 && albumItemAdapter.getSelectedIndex() != -1)
+                int selected = albumItemAdapter.getSelectedIndex();
+                if (albumItemAdapter.getItemCount() != 0 && selected != -1)
                 {
-                    if (Loader.renameAlbum(albumItemAdapter.getSelectedIndex(), "TEST_RENAME"))
-                        albumItemAdapter.notifyDataSetChanged();
-                    else
-                        Toast.makeText(getContext(), "Could not rename album. Please try again.", Toast.LENGTH_LONG).show();
-
+                    promptRenameAlbum(albumItemAdapter, selected);
                 }
                 else
                     Toast.makeText(getContext(), "No album was selected. Please select an album to rename.", Toast.LENGTH_SHORT).show();
@@ -126,7 +123,6 @@ public class HomeFragment extends Fragment {
     private void promptNewAlbum(AlbumItemAdapter albumItemAdapter)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
         View view = inflater.inflate(R.layout.single_entry_dialog, null);
 
@@ -145,15 +141,54 @@ public class HomeFragment extends Fragment {
                         String newValue = editText.getText().toString();
 
                         boolean success = Loader.addAlbum(newValue);
-                        if (success)
-                            albumItemAdapter.notifyDataSetChanged();
-                        else
+                        if (!success)
                             Toast.makeText(getContext(), "Could not add album. Please try a different name.", Toast.LENGTH_SHORT).show();
-                       }
+                        else
+                            albumItemAdapter.notifyDataSetChanged();
+                        return;
+                    }
                     })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Dialog d = (Dialog) dialog;
+                        d.dismiss();
+                    }
+                }).show();
+    }
+
+    // Prompt dialog to rename an album
+    private void promptRenameAlbum(AlbumItemAdapter albumItemAdapter, int albumIndex)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.single_entry_dialog, null);
+
+        builder.setTitle("Rename Album")
+                .setMessage("Enter a new name for the album");
+
+        // Inflate and set the layout for the dialog
+        builder.setView(view)
+                // Add action buttons
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Dialog d = (Dialog) dialog;
+
+                        EditText editText = (EditText) d.findViewById(R.id.single_entry_edittext);
+                        String newValue = editText.getText().toString();
+
+                        boolean success = Loader.renameAlbum(albumIndex, newValue);
+                        if (!success)
+                            Toast.makeText(getContext(), "Could not rename album. Please try a different name.", Toast.LENGTH_SHORT).show();
+                        else
+                            albumItemAdapter.notifyDataSetChanged();
                         return;
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Dialog d = (Dialog) dialog;
+                        d.dismiss();
                     }
                 }).show();
     }
