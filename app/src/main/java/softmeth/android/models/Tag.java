@@ -65,7 +65,7 @@ public class Tag implements Serializable {
     /** 
      * @return String
      */
-    protected String getValue()
+    public String getValue()
     {
         return this.value;
     }

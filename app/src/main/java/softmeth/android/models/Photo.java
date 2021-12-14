@@ -89,6 +89,8 @@ public class Photo implements Serializable {
 
     protected boolean deleteTag(String key, String value)
     {
+        if (this.tags.isEmpty())
+            return false;
         if (!this.tags.contains(new Tag(key, value)))
             return false;
         return this.tags.remove(new Tag(key, value));

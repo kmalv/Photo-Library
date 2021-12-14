@@ -16,7 +16,7 @@
       android:padding="5dp"
       android:orientation="vertical">
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/person_tag_value_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="@tools:sample/lorem[3]" />

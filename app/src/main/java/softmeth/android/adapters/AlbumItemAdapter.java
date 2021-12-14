@@ -84,9 +84,9 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
 
         // Ensure that the dataset (list of albums) can actually be rendered
         if (localDataSet == null)
-            System.out.println("Null localDataSet");
+            System.out.println("Null album localDataSet");
         else if (localDataSet.isEmpty())
-            System.out.println("Empty localDataSet");
+            System.out.println("Empty album localDataSet");
         else {
             // Ensure there is actually data inside the album
             if (localDataSet.get(pos) != null)

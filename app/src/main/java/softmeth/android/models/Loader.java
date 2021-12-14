@@ -27,18 +27,6 @@ public class Loader {
 
             user = (User) objIn.readObject();
 
-            // check the data >:(
-            for (Album a : user.getAlbums())
-            {
-                for (Photo p : a.getPhotos())
-                {
-                    System.out.println("bitmap null: " + p.getImage());
-                    System.out.println("name: " + p.getFilename());
-                    System.out.println("tags: " + p.getTags());
-
-                }
-            }
-
             in.close();
             objIn.close();
         }
@@ -241,23 +229,15 @@ public class Loader {
         return null;
     }
 
-    public static ArrayList<String> getPeopleTagValues(int albumIndex, int photoIndex)
+    public static ArrayList<Tag> getPeopleTagOnly(int albumIndex, int photoIndex)
     {
         if (user.getAlbum(albumIndex) == null)
             return null;
         if (user.getAlbum(albumIndex).getPhoto(photoIndex) == null)
             return null;
-        ArrayList<Tag> tags = user.getAlbum(albumIndex).getPhoto(photoIndex).getTags();
-        ArrayList<String> values = new ArrayList<String>();
+        ArrayList<Tag> values = user.getAlbum(albumIndex).getPhoto(photoIndex).getTags();
+        values.removeIf(p -> p.getKey().equals("LOCATION"));
 
-        for (Tag t : tags)
-        {
-            if (t.getKey().equals("PERSON"))
-                values.add(t.getValue());
-        }
-
-        if (values.isEmpty())
-            return null;
         return values;
     }
 
