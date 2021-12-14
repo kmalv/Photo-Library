@@ -11,13 +11,11 @@ import java.io.Serializable;
  * @author <em>ey150</em>  - Ernest Yakobchuk
  */
 public class Tag implements Serializable {
-    private boolean duplicatesAllowed;
     private String  key;
     private String  value;
 
-    public Tag(boolean duplicatesAllowed, String key, String value)
+    public Tag(String key, String value)
     {
-        this.duplicatesAllowed = duplicatesAllowed;
         this.key               = key.toUpperCase();
         this.value             = value.toLowerCase();
     }
@@ -31,13 +29,18 @@ public class Tag implements Serializable {
     {
         if (o instanceof Tag)
         {
-            Tag     t       = (Tag) o;
-            boolean sameKey = this.key.equals(t.key);
-            boolean canDupe = this.duplicatesAllowed && t.duplicatesAllowed; 
+            Tag t = (Tag) o;
+            if (this.key.equals("LOCATION"))
+                return t.getKey().equals("LOCATION") && this.value.equals(t.getValue());
+            else if (this.key.equals("PERSON"))
+                return t.getKey().equals("PERSON") && this.value.equals(t.getValue());
+
+            /*            boolean sameKey = this.key.equals(t.key);
+            boolean canDupe = this.duplicatesAllowed && t.duplicatesAllowed;
             if (sameKey && canDupe)
                 return this.value.equals(t.value);
             if (sameKey && !canDupe)
-                return true;
+                return true;*/
         }
         return false;
     }
@@ -52,7 +55,6 @@ public class Tag implements Serializable {
         return this.getKey() + ": " + this.getValue();
     }
 
-    
     /** 
      * @return String
      */
@@ -60,7 +62,6 @@ public class Tag implements Serializable {
     {
         return this.key;
     }
-
     
     /** 
      * @return String
@@ -68,14 +69,5 @@ public class Tag implements Serializable {
     protected String getValue()
     {
         return this.value;
-    }
-
-    
-    /** 
-     * @return boolean
-     */
-    protected boolean getDuplicatesAllowed()
-    {
-        return this.duplicatesAllowed;
     }
 }

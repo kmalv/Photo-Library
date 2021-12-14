@@ -181,9 +181,11 @@ public class Loader {
         return user.getAlbum(albumIndex).getPhoto(photoIndex);
     }
 
-    public static boolean addAlbum(Album album)
+    public static boolean addAlbum(String albumName)
     {
-        if (user.addAlbum(album))
+        if (albumName == null)
+            return false;
+        if (user.addAlbum(new Album(albumName)))
         {
             saveUser();
             return true;
@@ -205,17 +207,8 @@ public class Loader {
             // If photo already exists in some other album
             if (isInPhotoBank)
             {
-                // Get that photo instance and add it to the album
-                int indexInPhotoBank = user.getPhotoBank().indexOf(photoToAdd);
-                boolean added = dest.addPhoto(user.getPhotoBank().get(indexInPhotoBank));
-                System.out.println("added " + added);
-                if (added)
-                {
-                    saveUser();
-                    return true;
-                }
-                else
-                    return false;
+                // Do not add it (no dupes allowed between albums)
+                return false;
             }
             // Get photoBank instance of the photo, and add it to the album
             else
@@ -229,5 +222,72 @@ public class Loader {
         }
         else
             return false;
+    }
+
+    public static String getLocationValue(int albumIndex, int photoIndex)
+    {
+        if (user.getAlbum(albumIndex) == null)
+            return null;
+        if (user.getAlbum(albumIndex).getPhoto(photoIndex) == null)
+            return null;
+        ArrayList<Tag> tags = user.getAlbum(albumIndex).getPhoto(photoIndex).getTags();
+
+        for (Tag t : tags)
+        {
+            if (t.getKey().equals("LOCATION"))
+                return t.getValue();
+        }
+
+        return null;
+    }
+
+    public static ArrayList<String> getPeopleTagValues(int albumIndex, int photoIndex)
+    {
+        if (user.getAlbum(albumIndex) == null)
+            return null;
+        if (user.getAlbum(albumIndex).getPhoto(photoIndex) == null)
+            return null;
+        ArrayList<Tag> tags = user.getAlbum(albumIndex).getPhoto(photoIndex).getTags();
+        ArrayList<String> values = new ArrayList<String>();
+
+        for (Tag t : tags)
+        {
+            if (t.getKey().equals("PERSON"))
+                values.add(t.getValue());
+        }
+
+        if (values.isEmpty())
+            return null;
+        return values;
+    }
+
+    public static boolean deleteTag(int albumIndex, int photoIndex, String key, String value)
+    {
+        if (user.getAlbum(albumIndex) == null)
+            return false;
+        if (user.getAlbum(albumIndex).getPhoto(photoIndex) == null)
+            return false;
+        if (user.getAlbum(albumIndex).getPhoto(photoIndex).deleteTag(key, value))
+        {
+            saveUser();
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean addTagToPhoto(int albumIndex, int photoIndex, String key, String value)
+    {
+        if (user.getAlbum(albumIndex) == null)
+            return false;
+        if (user.getAlbum(albumIndex).getPhoto(photoIndex) == null)
+            return false;
+        if (value == null || value.isEmpty())
+            return false;
+        if (user.getAlbum(albumIndex).getPhoto(photoIndex).addTag(key, value))
+        {
+            saveUser();
+            return true;
+        }
+        return false;
     }
 }

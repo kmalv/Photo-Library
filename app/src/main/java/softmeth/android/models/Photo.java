@@ -68,6 +68,20 @@ public class Photo implements Serializable {
         return this.tags;
     }
 
+    protected boolean addTag(String key, String value)
+    {
+        if (this.tags.contains(new Tag(key, value)))
+            return false;
+        return this.tags.add(new Tag(key, value));
+    }
+
+    protected boolean deleteTag(String key, String value)
+    {
+        if (!this.tags.contains(new Tag(key, value)))
+            return false;
+        return this.tags.remove(new Tag(key, value));
+    }
+
     /** 
      * @return {@code true} if this photo and the passed Object
      * are both Photo objects with the same path, {@code false}

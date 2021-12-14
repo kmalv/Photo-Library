@@ -56,6 +56,9 @@ public class PhotoFragment extends Fragment {
         final TabItemLayoutAdapter adapter = new TabItemLayoutAdapter(getActivity(), bundle);
         viewPager.setAdapter(adapter);
 
+        // don't let use swipe between tabs!
+        viewPager.setUserInputEnabled(false);
+
         new TabLayoutMediator(tabLayout, viewPager, ((tab, position) -> tab.setText(titles[position]))).attach();
 
         return view;

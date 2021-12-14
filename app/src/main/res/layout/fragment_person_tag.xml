@@ -15,7 +15,7 @@
         android:weightSum="2">
 
         <Button
-            android:id="@+id/add_tag_button"
+            android:id="@+id/add_location_button"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,6 +34,7 @@
             android:textAllCaps="false"
             app:icon="@android:drawable/ic_delete"
             app:iconGravity="end" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

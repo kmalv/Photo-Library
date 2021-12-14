@@ -24,7 +24,6 @@ import softmeth.android.R;
 import softmeth.android.models.Album;
 
 public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.ViewHolder> {
-
     private final ArrayList<Album> localDataSet;
     private final Context context;
     private int selectedIndex = RecyclerView.NO_POSITION;

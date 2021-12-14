@@ -1,5 +1,8 @@
 package softmeth.android.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,7 +34,6 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        Loader.addAlbum(new Album("test"));
         // Set up recycler view
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.album_recyclerview);
         AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(getContext(), Loader.getAlbums());
@@ -89,7 +93,16 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getContext(), "Could not delete album. Please try again.", Toast.LENGTH_LONG).show();
                 }
                 else
-                    Toast.makeText(getContext(), "No album was selected. Please select an album to open.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "No album was selected. Please select an album to delete.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Create button listener
+        Button createButton = (Button) view.findViewById(R.id.create_button);
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptNewAlbum(albumItemAdapter);
             }
         });
 
@@ -107,5 +120,41 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    // Creates the AlertDialog that asks the user for the new album name
+    private void promptNewAlbum(AlbumItemAdapter albumItemAdapter)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.single_entry_dialog, null);
+
+        builder.setTitle("New Album")
+                .setMessage("Enter a name for the new album");
+
+        // Inflate and set the layout for the dialog
+        builder.setView(view)
+                // Add action buttons
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Dialog d = (Dialog) dialog;
+
+                        EditText editText = (EditText) d.findViewById(R.id.single_entry_edittext);
+                        String newValue = editText.getText().toString();
+
+                        boolean success = Loader.addAlbum(newValue);
+                        if (success)
+                            albumItemAdapter.notifyDataSetChanged();
+                        else
+                            Toast.makeText(getContext(), "Could not add album. Please try a different name.", Toast.LENGTH_SHORT).show();
+                       }
+                    })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        return;
+                    }
+                }).show();
     }
 }

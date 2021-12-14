@@ -18,7 +18,6 @@ import softmeth.android.models.Album;
 import softmeth.android.models.Photo;
 
 public class ThumbnailItemAdapter extends RecyclerView.Adapter<ThumbnailItemAdapter.ViewHolder> {
-
     private final ArrayList<Photo> localDataSet;
     private final Context context;
     private int selectedIndex = RecyclerView.NO_POSITION;

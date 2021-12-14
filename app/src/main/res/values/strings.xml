@@ -27,4 +27,6 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="move_button_text">Move</string>
+    <string name="open_selected_photo_button_text">Open selected photo...</string>
 </resources>
