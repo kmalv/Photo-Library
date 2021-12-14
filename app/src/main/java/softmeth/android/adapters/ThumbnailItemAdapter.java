@@ -90,16 +90,21 @@ public class ThumbnailItemAdapter extends RecyclerView.Adapter<ThumbnailItemAdap
                 viewHolder.getImageView().setImageBitmap(image);
 
                 // If item isn't selected, we want to give it a white bg
+                // Otherwise highlight it
                 if (selectedIndex != pos)
                     viewHolder.itemView.setBackgroundColor(Color.argb(100, 255, 255, 255));
+                else
+                    viewHolder.itemView.setBackgroundColor(Color.argb(100, 207, 207, 207));
 
                 // Set onClickListener for each item
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Set bg back to white on reselect
                         if (selectedIndex == pos)
                         {
                             selectedIndex = RecyclerView.NO_POSITION;
+                            viewHolder.itemView.setBackgroundColor(Color.argb(100, 255, 255, 255));
                             notifyDataSetChanged();
                             return;
                         }

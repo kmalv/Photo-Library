@@ -285,6 +285,7 @@ public class Loader {
             return false;
         if (user.getAlbum(albumIndex).getPhoto(photoIndex).addTag(key, value))
         {
+            System.out.println("SUCCESSFULLY ADDED TAG");
             saveUser();
             return true;
         }
