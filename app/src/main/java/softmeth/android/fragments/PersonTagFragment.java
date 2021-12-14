@@ -81,12 +81,13 @@ public class PersonTagFragment extends Fragment {
 
                         EditText editText = (EditText) d.findViewById(R.id.single_entry_edittext);
                         String newValue = editText.getText().toString();
-                        if(Loader.getPeopleTagValues(albumIndex, photoIndex) != null)
-                            Toast.makeText(getContext(), "Could not set PEOPLE tag. Please try again.", Toast.LENGTH_SHORT).show();
+                        if(false){}
+
                         else{
-                            boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "PEOPLE", newValue);
+                            boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "PERSON", newValue);
                             if (success)
-                                peopleTextView.setText((CharSequence) Loader.getPeopleTagValues(albumIndex, photoIndex));
+                                peopleTextView.setText(newValue);
+                                // peopleTextView.setText(Loader.getPeopleTagValues(albumIndex, photoIndex));
                             else
                                 Toast.makeText(getContext(), "Could not set PEOPLE tag. Please try again.", Toast.LENGTH_SHORT).show();
                         }

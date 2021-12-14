@@ -90,6 +90,7 @@ public class LocationTagFragment extends Fragment {
 
                         EditText editText = (EditText) d.findViewById(R.id.single_entry_edittext);
                         String newValue = editText.getText().toString();
+
                         if(Loader.getLocationValue(albumIndex, photoIndex) != null)
                             Toast.makeText(getContext(), "Could not set LOCATION tag. Please try again.", Toast.LENGTH_SHORT).show();
                         else{
