@@ -8,6 +8,8 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -15,11 +17,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import softmeth.android.R;
+import softmeth.android.models.Album;
+import softmeth.android.models.Loader;
+import softmeth.android.models.Photo;
+import softmeth.android.models.Tag;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
+ * Use the {@link SearchFragment newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SearchFragment extends Fragment {
@@ -28,9 +36,27 @@ public class SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ArrayList<Album> albums = Loader.getAlbums();
+        ArrayList<Photo> photos;
+        ArrayList<String> tags = new ArrayList<>();
+        // ArrayList<String> people_tags;
+        int num_albums = albums.size();
+        int num_photos;
+
+        for (int i = 0; i <= num_albums; ++i){
+            photos = Loader.getPhotosFromAlbum(i);
+            num_photos = photos.size();
+            for(int j = 0; j <= num_photos; ++j){
+                tags.add(Loader.getLocationValue(i,j));
+            }
+
+        }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login_for_search, container, false);
 
@@ -42,7 +68,12 @@ public class SearchFragment extends Fragment {
         EditText location = view.findViewById(R.id.location_text_field);
         EditText people = view.findViewById(R.id.people_text_field);
 
+        AutoCompleteTextView editText = view.findViewById(R.id.location_text_field);
+        AutoCompleteTextView editText2 = view.findViewById(R.id.people_text_field);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, tags);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
 
+        editText.setAdapter(adapter1);
 
         // Ok button listener
         Button okButton = (Button) view.findViewById(R.id.ok_button);

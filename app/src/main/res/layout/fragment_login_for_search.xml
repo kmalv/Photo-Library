@@ -17,7 +17,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:hint="LOCATION=NEWYORK"
+        android:hint="LOCATION=NEW YORK"
+        android:completionThreshold="7"
         android:inputType="text|textAutoComplete|textCapCharacters"
         android:paddingVertical="20dp"
         android:selectAllOnFocus="true" />
@@ -60,8 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:hint="PEOPLE=MARIA"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionDone|actionSearch"
+        android:completionThreshold="7"
         android:inputType="textAutoComplete|textCapCharacters"
         android:paddingVertical="20dp"
         android:selectAllOnFocus="true" />
