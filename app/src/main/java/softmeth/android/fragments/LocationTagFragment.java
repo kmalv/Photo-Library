@@ -90,12 +90,15 @@ public class LocationTagFragment extends Fragment {
 
                         EditText editText = (EditText) d.findViewById(R.id.single_entry_edittext);
                         String newValue = editText.getText().toString();
-
-                        boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "LOCATION", newValue);
-                        if (success)
-                            locationTextView.setText(Loader.getLocationValue(albumIndex, photoIndex));
-                        else
+                        if(Loader.getLocationValue(albumIndex, photoIndex) != null)
                             Toast.makeText(getContext(), "Could not set LOCATION tag. Please try again.", Toast.LENGTH_SHORT).show();
+                        else{
+                            boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "LOCATION", newValue);
+                            if (success)
+                                locationTextView.setText(Loader.getLocationValue(albumIndex, photoIndex));
+                            else
+                                Toast.makeText(getContext(), "Could not set LOCATION tag. Please try again.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
