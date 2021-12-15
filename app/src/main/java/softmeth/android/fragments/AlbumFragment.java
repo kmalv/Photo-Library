@@ -128,6 +128,8 @@ public class AlbumFragment extends Fragment {
                     bundle.putInt("albumIndex", index);
                     bundle.putInt("photoIndex", selected);
 
+                    System.out.println("INITIAL: " + selected);
+
                     Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoViewPagerFragment, bundle);
                 }
                 else

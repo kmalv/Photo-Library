@@ -35,6 +35,9 @@ public class PhotoViewPagerFragment extends Fragment {
         // Don't let users swipe betwen photos
         viewPager.setUserInputEnabled(false);
 
+        // Set current item to the selected photo (as specified in the bundle)
+        viewPager.setCurrentItem(photoIndex);
+
         // Disable buttons if there are no previous/next photos
         Button previousButton = (Button) view.findViewById(R.id.previous_photo_button);
         Button nextButton     = (Button) view.findViewById(R.id.next_photo_button);

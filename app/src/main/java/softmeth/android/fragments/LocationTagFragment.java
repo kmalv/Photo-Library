@@ -35,6 +35,7 @@ public class LocationTagFragment extends Fragment {
         int albumIndex = bundle.getInt("albumIndex");
         int photoIndex = bundle.getInt("photoIndex");
 
+        // Set initial location value
         TextView locationTextView = (TextView) view.findViewById(R.id.location_text_view);
         String locationValue = Loader.getLocationValue(albumIndex, photoIndex);
         if (locationValue != null)
@@ -54,11 +55,8 @@ public class LocationTagFragment extends Fragment {
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String currentValue = Loader.getLocationValue(albumIndex, photoIndex);
-                if (currentValue != null) {
-                    if (Loader.deleteTag(albumIndex, photoIndex, "LOCATION", Loader.getLocationValue(albumIndex, photoIndex)))
+                if (Loader.deleteTag(albumIndex, photoIndex, "LOCATION", Loader.getLocationValue(albumIndex, photoIndex)))
                         locationTextView.setText(R.string.location_tag_default_text);
-                }
                 else
                     Toast.makeText(getContext(), "Could not clear this photo's LOCATION value", Toast.LENGTH_SHORT).show();
             }
@@ -91,15 +89,11 @@ public class LocationTagFragment extends Fragment {
                         EditText editText = (EditText) d.findViewById(R.id.single_entry_edittext);
                         String newValue = editText.getText().toString();
 
-                        if(Loader.getLocationValue(albumIndex, photoIndex) != null)
+                        boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "LOCATION", newValue.toLowerCase());
+                        if (success)
+                            locationTextView.setText(Loader.getLocationValue(albumIndex, photoIndex));
+                        else
                             Toast.makeText(getContext(), "Could not set LOCATION tag. Please try again.", Toast.LENGTH_SHORT).show();
-                        else{
-                            boolean success = Loader.addTagToPhoto(albumIndex, photoIndex, "LOCATION", newValue);
-                            if (success)
-                                locationTextView.setText(Loader.getLocationValue(albumIndex, photoIndex));
-                            else
-                                Toast.makeText(getContext(), "Could not set LOCATION tag. Please try again.", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

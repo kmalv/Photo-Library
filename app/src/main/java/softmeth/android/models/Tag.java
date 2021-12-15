@@ -31,7 +31,7 @@ public class Tag implements Serializable {
         {
             Tag t = (Tag) o;
             if (this.key.equals("LOCATION"))
-                return t.getKey().equals("LOCATION") && this.value.equals(t.getValue());
+                return t.getKey().equals("LOCATION");
             else if (this.key.equals("PERSON"))
                 return t.getKey().equals("PERSON") && this.value.equals(t.getValue());
 
@@ -45,7 +45,6 @@ public class Tag implements Serializable {
         return false;
     }
 
-    
     /** 
      * @return String
      */
@@ -66,8 +65,19 @@ public class Tag implements Serializable {
     /** 
      * @return String
      */
-    protected String getValue()
+    public String getValue()
     {
         return this.value;
+    }
+
+    protected boolean setValue(String value)
+    {
+        if (this.getKey().equals("LOCATION"))
+        {
+            this.value = value;
+            return true;
+        }
+        else
+            return false;
     }
 }

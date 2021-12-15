@@ -84,9 +84,9 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
 
         // Ensure that the dataset (list of albums) can actually be rendered
         if (localDataSet == null)
-            System.out.println("Null localDataSet");
+            System.out.println("Null album localDataSet");
         else if (localDataSet.isEmpty())
-            System.out.println("Empty localDataSet");
+            System.out.println("Empty album localDataSet");
         else {
             // Ensure there is actually data inside the album
             if (localDataSet.get(pos) != null)
@@ -97,30 +97,34 @@ public class AlbumItemAdapter extends RecyclerView.Adapter<AlbumItemAdapter.View
                 // Ensure there are actually photos in the album
                 if (!localDataSet.get(pos).getPhotos().isEmpty())
                     image = localDataSet.get(pos).getPhotos().get(0).getImage();
-                else
-                    System.out.println("Album at position " + pos + " has no photos.");
 
                 viewHolder.getTextView().setText(caption);
                 viewHolder.getImageView().setImageBitmap(image);
 
+                System.out.println("SELECTED ITEM: " + selectedIndex + " CURR POS: " + pos);
+
                 // Makes all items that aren't selected have a white background
+                // and currently selected item have a selected background color
                 if (selectedIndex != pos)
                     viewHolder.itemView.setBackgroundColor(Color.argb(100, 255, 255, 255));
+                else
+                    viewHolder.itemView.setBackgroundColor(Color.argb(100, 207, 207, 207));
 
                 // Set onClickListener for each item
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // Handles unclicking a clicked item
+                        // Handles unclicking a clicked item, changes its bg back to white
                         if (selectedIndex == pos)
                         {
                             selectedIndex = RecyclerView.NO_POSITION;
+                            viewHolder.itemView.setBackgroundColor(Color.argb(100, 255, 255, 255));
                             notifyDataSetChanged();
                             return;
                         }
                         // If item is clicked, we want to change its color to show it's selected
                         selectedIndex = pos;
-                        viewHolder.itemView.setBackgroundColor(Color.argb(100, 235, 235, 235));
+                        viewHolder.itemView.setBackgroundColor(Color.argb(100, 207, 207, 207));
                         notifyDataSetChanged();
                     }
                 });
