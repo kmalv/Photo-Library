@@ -57,7 +57,7 @@ public class Tag implements Serializable {
     /** 
      * @return String
      */
-    protected String getKey()
+    public String getKey()
     {
         return this.key;
     }

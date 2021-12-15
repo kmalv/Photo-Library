@@ -271,4 +271,20 @@ public class Loader {
         }
         return false;
     }
+
+    public static ArrayList<Tag> getAllTags()
+    {
+        ArrayList<Tag> tags = new ArrayList<Tag>();
+
+        for (Album a : user.getAlbums())
+        {
+            for (Photo p : a.getPhotos())
+            {
+                if (!p.getTags().isEmpty())
+                    tags.addAll(p.getTags());
+            }
+        }
+
+        return tags;
+    }
 }

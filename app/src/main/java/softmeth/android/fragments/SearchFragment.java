@@ -42,23 +42,10 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ArrayList<Album> albums = Loader.getAlbums();
-        ArrayList<Photo> photos;
-        ArrayList<String> tags = new ArrayList<>();
-        // ArrayList<String> people_tags;
-        int num_albums = albums.size();
-        int num_photos;
-
-        for (int i = 0; i <= num_albums; ++i){
-            photos = Loader.getPhotosFromAlbum(i);
-            num_photos = photos.size();
-            for(int j = 0; j <= num_photos; ++j){
-                tags.add(Loader.getLocationValue(i,j));
-            }
-
-        }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login_for_search, container, false);
+
+        ArrayList<String> formattedTags = createFormattedTagList(Loader.getAllTags());
 
         RadioGroup rdgrp = (RadioGroup) view.findViewById(R.id.radioGroup);
         RadioButton orrdb = (RadioButton) view.findViewById(R.id.OR_radio);
@@ -147,5 +134,13 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
+    private ArrayList<String> createFormattedTagList(ArrayList<Tag> tags)
+    {
+        ArrayList<String> formattedTags = new ArrayList<String>();
 
+        for (Tag t : tags)
+            formattedTags.add(t.getKey() + "=" + t.getValue());
+
+        return formattedTags;
+    }
 }
