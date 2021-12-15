@@ -15,6 +15,9 @@ public class Loader {
     private static final String filename = "info.data";
     private static Context context;
     private static User user = null;
+    private static ArrayList<Photo> searchResults = new ArrayList<Photo>();
+
+    public enum Search { OR, AND };
 
     // Loads user info from info.data file
     public static void loadUser(Context passedContext)
@@ -287,4 +290,86 @@ public class Loader {
 
         return tags;
     }
+
+    public static void singleTagSearch(String key, String value)
+    {
+        ArrayList<Photo> results = new ArrayList<Photo>();
+
+        for (Album a : user.getAlbums())
+        {
+            for (Photo p : a.getPhotos())
+            {
+                if (p.getTags().contains(new Tag(key, value)))
+                    results.add(p);
+            }
+        }
+
+        searchResults = results;
+    }
+
+    public static ArrayList<Photo> getSearchResults()
+    {
+        return searchResults;
+    }
+
+    public static void doubleTagSearch(Search type, String key1, String value1, String key2, String value2)
+    {
+        ArrayList<Photo> results = new ArrayList<Photo>();
+
+        if (type == Search.OR)
+        {
+            for (Album a : user.getAlbums()) {
+               for (Photo p : a.getPhotos()) {
+                    boolean add = false;
+                    for (Tag t : p.getTags())
+                    {
+                        String tKey = t.getKey();
+                        String tVal = t.getValue();
+
+                        if(tKey.equals(key1) && tVal.equals(value1))
+                        {
+                            add = true;
+                            break;
+                        }
+                        else if (tKey.equals(key2) && tVal.equals(value2));
+                        {
+                            add = true;
+                            break;
+                        }
+                    }
+                    if (add)
+                        results.add(p);
+                }
+            }
+        }
+        else if (type == Search.AND)
+        {
+            for (Album a : user.getAlbums())
+            {
+                for (Photo p : a.getPhotos())
+                {
+                    boolean match1 = false, match2 = false;
+                    for (Tag t : p.getTags())
+                    {
+                        String tKey = t.getKey();
+                        String tVal = t.getValue();
+
+                        if(tKey.equals(key1) && tVal.equals(value1))
+                        {
+                            match1 = true;
+                        }
+                        else if (tKey.equals(key2) && tVal.equals(value2));
+                        {
+                            match2 = true;
+                        }
+                    }
+                    if (match1 && match2)
+                        results.add(p);
+                }
+            }
+        }
+
+        searchResults = results;
+    }
+
 }

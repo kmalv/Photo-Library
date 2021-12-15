@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -31,86 +32,168 @@ import softmeth.android.models.Tag;
  * create an instance of this fragment.
  */
 public class SearchFragment extends Fragment {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
-
+    private enum Filter { LOCATION, PERSON };
+    private ArrayList<String> autoCompleteList1;
+    private ArrayList<String> autoCompleteList2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_login_for_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        ArrayList<String> formattedTags = createFormattedTagList(Loader.getAllTags());
+        autoCompleteList1 = createFormattedTagList(Filter.LOCATION, Loader.getAllTags());
+        autoCompleteList2 = createFormattedTagList(Filter.LOCATION, Loader.getAllTags());
 
-        RadioGroup rdgrp = (RadioGroup) view.findViewById(R.id.radioGroup);
+        // Radio groups
         RadioButton orrdb = (RadioButton) view.findViewById(R.id.OR_radio);
         RadioButton andrdb = (RadioButton) view.findViewById(R.id.AND_radio);
         RadioButton clearrdb = (RadioButton) view.findViewById(R.id.clear_radio_button);
 
-        EditText location = view.findViewById(R.id.location_text_field);
-        EditText people = view.findViewById(R.id.people_text_field);
+        // Toggles
+        ToggleButton firstToggle = (ToggleButton) view.findViewById(R.id.textfield1_toggle);
+        ToggleButton secondToggle = (ToggleButton) view.findViewById(R.id.textfield2_toggle);
 
-        AutoCompleteTextView editText = view.findViewById(R.id.location_text_field);
-        AutoCompleteTextView editText2 = view.findViewById(R.id.people_text_field);
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, tags);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
+        // Text fields and their adapters
+        AutoCompleteTextView editText1 = view.findViewById(R.id.textfield1);
+        AutoCompleteTextView editText2 = view.findViewById(R.id.textfield2);
 
-        editText.setAdapter(adapter1);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, autoCompleteList1);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, autoCompleteList2);
+
+        editText1.setAdapter(adapter1);
+        editText2.setAdapter(adapter2);
+
+        // On click listeners to reset filters
+        firstToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (firstToggle.isChecked())
+                {
+                    autoCompleteList1 = createFormattedTagList(Filter.PERSON, Loader.getAllTags());
+                    adapter1.clear();
+                    adapter1.addAll(autoCompleteList1);
+                }
+                else
+                {
+                    autoCompleteList1 = createFormattedTagList(Filter.LOCATION, Loader.getAllTags());
+                    adapter1.clear();
+                    adapter1.addAll(autoCompleteList1);
+                }
+            }
+        });
+
+        secondToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (secondToggle.isChecked()) {
+                    autoCompleteList2 = createFormattedTagList(Filter.PERSON, Loader.getAllTags());
+                    adapter2.clear();
+                    adapter2.addAll(autoCompleteList2);
+                }
+                else
+                {
+                    autoCompleteList2 = createFormattedTagList(Filter.LOCATION, Loader.getAllTags());
+                    adapter2.clear();
+                    adapter2.addAll(autoCompleteList2);
+                }
+            }
+        });
 
         // Ok button listener
         Button okButton = (Button) view.findViewById(R.id.ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {   // Search only if conditions are met
-                Boolean orSearch = false;
-                Boolean andSearch = false;
-                Boolean singleSearch = false;
-                Boolean hasLocation = false;
-                Boolean hasPeople = false;
+            public void onClick(View view) {
+                String query1 = editText1.getText().toString();
+                String query2 = editText2.getText().toString();
 
-                if(location.getText().toString().isEmpty() && (people.getText().toString().isEmpty())){
-                    Toast.makeText(getContext(), "No Tags Entered", Toast.LENGTH_SHORT).show();
+                // INVALID QUERY HANDLING/SINGLE SEARCH
+                // Null queries
+                if (query1.isEmpty() && query2.isEmpty()) {
+                    Toast.makeText(getContext(), "Invalid search. Please enter at least one query.", Toast.LENGTH_LONG).show();
+                    return;
                 }
-                else if (!people.getText().toString().isEmpty()){
-                    String ppl = people.getText().toString().toUpperCase();
-                    hasPeople = true;
-                }
-                else if (!location.getText().toString().isEmpty()){
-                    String loc = location.getText().toString().toUpperCase();
-                    hasLocation = true;
-                }
+                // Single tag search
+                else if (query1.isEmpty() && !query2.isEmpty()) {
+                    // Make sure clear is selected
+                    if (clearrdb.isChecked()) {
 
-                if(hasLocation && hasPeople && orrdb.isChecked()){
-                    orSearch = true;
-                    // search loc || ppl;
-                    Toast.makeText(getContext(), "OR SEARCH", Toast.LENGTH_SHORT).show();
+                        query2 = query2.toLowerCase();
+
+                        String key2 = (secondToggle.isChecked()) ? "PERSON" : "LOCATION";
+
+                        Loader.singleTagSearch(key2, query2);
+                        if (Loader.getSearchResults().isEmpty()) {
+                            Toast.makeText(getContext(), "No results for these queries. Please try again.", Toast.LENGTH_LONG).show();
+                            return;
+                        } else
+                            Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_searchResultsFragment);
+                    } else {
+                        Toast.makeText(getContext(), "Invalid search criteria. Choose CLEAR for a single tag search.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
-                else if(hasLocation && hasPeople && clearrdb.isChecked()){
-                    Toast.makeText(getContext(), "SELECT A RADIO", Toast.LENGTH_SHORT).show();
+                // Single tag search
+                else if (!query1.isEmpty() && query2.isEmpty()) {
+                    // Make sure clear is selected
+                    if (clearrdb.isChecked()) {
+                        query1 = query1.toLowerCase();
+
+                        String key1 = (firstToggle.isChecked()) ? "PERSON" : "LOCATION";
+
+                        Loader.singleTagSearch(key1, query1);
+                        if (Loader.getSearchResults().isEmpty()) {
+                            Toast.makeText(getContext(), "No results for these queries. Please try again.", Toast.LENGTH_LONG).show();
+                            return;
+                        } else
+                            Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_searchResultsFragment);
+                    } else {
+                        Toast.makeText(getContext(), "Invalid search criteria. Choose CLEAR for a single tag search.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
-                else if(hasLocation && hasPeople && andrdb.isChecked()){
-                    andSearch = true;
-                    // search loc && ppl;
-                    Toast.makeText(getContext(), "AND SEARCH", Toast.LENGTH_SHORT).show();
+                // Double tag search
+                else if (!(query1.isEmpty() && query2.isEmpty())) {
+                    // Make sure clear is NOT checked
+                    if (clearrdb.isChecked()) {
+                        Toast.makeText(getContext(), "Invalid search criteria. Choose AND or OR for a double tag search.", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        if (andrdb.isChecked()) {
+                            query1 = query1.toLowerCase();
+                            query2 = query2.toLowerCase();
+
+                            String key1 = (firstToggle.isChecked()) ? "PERSON" : "LOCATION";
+                            String key2 = (secondToggle.isChecked()) ? "PERSON" : "LOCATION";
+
+                            Loader.doubleTagSearch(Loader.Search.AND, key1, query1, key2, query2);
+                            if (Loader.getSearchResults().isEmpty()) {
+                                Toast.makeText(getContext(), "No results for these queries. Please try again.", Toast.LENGTH_LONG).show();
+                                return;
+                            } else
+                                Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_searchResultsFragment);
+                        } else if (orrdb.isChecked()) {
+
+                            query1 = query1.toLowerCase();
+                            query2 = query2.toLowerCase();
+
+                            String key1 = (firstToggle.isChecked()) ? "PERSON" : "LOCATION";
+                            String key2 = (secondToggle.isChecked()) ? "PERSON" : "LOCATION";
+
+                            Loader.doubleTagSearch(Loader.Search.OR, key1, query1, key2, query2);
+                            if (Loader.getSearchResults().isEmpty()) {
+                                Toast.makeText(getContext(), "No results for these queries. Please try again.", Toast.LENGTH_LONG).show();
+                                return;
+                            } else
+                                Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_searchResultsFragment);
+                        } else {
+                            Toast.makeText(getContext(), "Unexpected error in search button listener. Please try again.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                 }
-                else if ((hasLocation && !hasPeople) && clearrdb.isChecked()){
-                    singleSearch = true;
-                    // search loc;
-                    Toast.makeText(getContext(), "SINGLE SEARCH", Toast.LENGTH_SHORT).show();
-                }
-                else if ((!hasLocation && hasPeople) && clearrdb.isChecked()){
-                    singleSearch = true;
-                    // search ppl;
-                }
-                else
-                    Toast.makeText(getContext(), "Invalid search criteria", Toast.LENGTH_SHORT).show();
-                }
+            }
         });
 
         // Cancel button listener
@@ -119,28 +202,26 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                Navigation.findNavController(view).navigate(R.id.homeFragment);
-            }
-        });
-
-
-        rdgrp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Check which radiobutton was pressed
+                Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_homeFragment);
             }
         });
 
         return view;
     }
 
-    private ArrayList<String> createFormattedTagList(ArrayList<Tag> tags)
+    private ArrayList<String> createFormattedTagList(Filter filter, ArrayList<Tag> tags)
     {
         ArrayList<String> formattedTags = new ArrayList<String>();
+        String filterKey = (filter == Filter.LOCATION) ? "LOCATION" : "PERSON";
 
         for (Tag t : tags)
-            formattedTags.add(t.getKey() + "=" + t.getValue());
-
+        {
+            if (t.getKey().equals(filterKey) && !formattedTags.contains(t.getValue()))
+            {
+                formattedTags.add(t.getValue());
+            }
+        }
+        System.out.println(formattedTags);
         return formattedTags;
     }
 }
