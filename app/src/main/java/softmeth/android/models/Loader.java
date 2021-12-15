@@ -147,6 +147,24 @@ public class Loader {
         return false;
     }
 
+    public static boolean movePhoto(int albumIndex, int photoIndex, int newalbumindex)
+    {
+        //check that album/photo exist in the user's list of albums/photos
+        if (user.getAlbum(albumIndex).getPhoto(photoIndex) != null){
+            if (user.getAlbum(newalbumindex) != null) {
+                Photo temp = user.getAlbum(albumIndex).getPhoto(photoIndex);
+                deletePhotoFromAlbum(albumIndex, photoIndex);
+
+                if(user.getAlbum(newalbumindex).addPhoto(temp)){
+                    saveUser();
+                    return true;
+                }
+            }
+        } return false;
+
+
+    }
+
     public static Album getAlbum(int index)
     {
         return user.getAlbum(index);
