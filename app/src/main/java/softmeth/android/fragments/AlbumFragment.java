@@ -47,6 +47,7 @@ import softmeth.android.adapters.ThumbnailItemAdapter;
 import softmeth.android.models.Album;
 import softmeth.android.models.Loader;
 import softmeth.android.models.Photo;
+import softmeth.android.models.User;
 
 public class AlbumFragment extends Fragment {
     private final int SPAN_COUNT = 2;
@@ -94,27 +95,36 @@ public class AlbumFragment extends Fragment {
 
         // Open user's Gallery and prompt them to add a photo
         Button moveButton = (Button) view.findViewById(R.id.move_photo_button);
+        Button move_to_button = (Button) view.findViewById(R.id.move_to);
         Photo photo_to_move;
         Photo temp;
         Album dest;
         Album origin;
         moveButton.setOnClickListener(new View.OnClickListener() {
+//            selected photo
+//            move button clicked
+//            get list of albums
+//            popup window
+//            list of albums displayed
+//            album selected
+//            exit popupwindow
+//            selected photo deleted from current album
+//            selcted photo added to album selected
             @Override
             public void onClick(View view) {
-
-                Context context = getContext();
-
-                ArrayList<Album> albums = Loader.getAlbums();
-                // define your view here that found in popup_layout
-                // for example let consider you have a button
-                ListPopupWindow albumsPopup = new ListPopupWindow(context);
-                ArrayAdapter<Album> adapter = new ArrayAdapter<Album>(context, android.R.layout.simple_expandable_list_item_1, albums);
-                albumsPopup.setAdapter(adapter);
-                albumsPopup.show();
+                int selected = thumbnailItemAdapter.getSelectedIndex();
+                if (thumbnailItemAdapter.getItemCount() != 0 && selected != RecyclerView.NO_POSITION) {
+                    Object[] albums = Loader.getAlbums().toArray();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("albumIndex", index);
+                    bundle.putInt("photoIndex", selected);
+                    Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_itemFragment, bundle);
+                } else {
+                    Toast.makeText(getContext(), "No photo was selected. Please select a photo to move.", Toast.LENGTH_SHORT);
                 }
 
+            }});
 
-        });
 
         // Open button listener
         Button openButton = (Button) view.findViewById(R.id.open_photo_button);

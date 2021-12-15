@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_albumFragment_to_photoViewPagerFragment"
             app:destination="@id/photoViewPagerFragment" />
+        <action
+            android:id="@+id/action_albumFragment_to_itemFragment"
+            app:destination="@id/itemFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -36,4 +39,12 @@
         android:name="softmeth.android.fragments.PhotoViewPagerFragment"
         android:label="fragment_photo_view_pager"
         tools:layout="@layout/fragment_photo_view_pager" />
+    <fragment
+        android:id="@+id/itemFragment"
+        android:name="softmeth.android.fragments.ItemFragment"
+        android:label="ItemFragment" >
+        <action
+            android:id="@+id/action_itemFragment_to_albumFragment"
+            app:destination="@id/albumFragment" />
+    </fragment>
 </navigation>
