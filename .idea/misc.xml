@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ernes/AndroidStudioProjects/androidphotos07/app/src/main/res/layout/activity_main.xml" value="0.28425925925925927" />
+        <entry key="..\:/Users/ernes/AndroidStudioProjects/androidphotos07/app/src/main/res/layout/fragment_album.xml" value="0.28425925925925927" />
+        <entry key="..\:/Users/ernes/AndroidStudioProjects/androidphotos07/app/src/main/res/layout/fragment_home.xml" value="0.3997395833333333" />
+        <entry key="..\:/Users/ernes/AndroidStudioProjects/androidphotos07/app/src/main/res/layout/recycler_view_album_item.xml" value="0.3265625" />
+        <entry key="..\:/Users/ernes/AndroidStudioProjects/androidphotos07/app/src/main/res/layout/recycler_view_item.xml" value="0.28425925925925927" />
         <entry key="..\:/school/RU/fall2021/cs213/code/PhotosAndroid07/app/src/main/res/layout/activity_main.xml" value="0.17604166666666668" />
         <entry key="..\:/school/RU/fall2021/cs213/code/PhotosAndroid07/app/src/main/res/layout/fragment_album.xml" value="0.2640625" />
         <entry key="..\:/school/RU/fall2021/cs213/code/PhotosAndroid07/app/src/main/res/layout/fragment_home.xml" value="0.2364179037174423" />

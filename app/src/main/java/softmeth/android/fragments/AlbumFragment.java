@@ -4,35 +4,49 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.ImageDecoder;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.MenuPopupWindow;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListPopupWindow;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import softmeth.android.R;
+import softmeth.android.adapters.AlbumItemAdapter;
 import softmeth.android.adapters.ThumbnailItemAdapter;
+import softmeth.android.models.Album;
 import softmeth.android.models.Loader;
+import softmeth.android.models.Photo;
 
 public class AlbumFragment extends Fragment {
     private final int SPAN_COUNT = 2;
@@ -76,6 +90,30 @@ public class AlbumFragment extends Fragment {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 imagePicker.launch(intent);
             }
+        });
+
+        // Open user's Gallery and prompt them to add a photo
+        Button moveButton = (Button) view.findViewById(R.id.move_photo_button);
+        Photo photo_to_move;
+        Photo temp;
+        Album dest;
+        Album origin;
+        moveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Context context = getContext();
+
+                ArrayList<Album> albums = Loader.getAlbums();
+                // define your view here that found in popup_layout
+                // for example let consider you have a button
+                ListPopupWindow albumsPopup = new ListPopupWindow(context);
+                ArrayAdapter<Album> adapter = new ArrayAdapter<Album>(context, android.R.layout.simple_expandable_list_item_1, albums);
+                albumsPopup.setAdapter(adapter);
+                albumsPopup.show();
+                }
+
+
         });
 
         // Open button listener
