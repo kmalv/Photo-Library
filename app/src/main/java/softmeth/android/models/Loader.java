@@ -149,8 +149,6 @@ public class Loader {
 
     public static boolean movePhoto(int albumIndex, int photoIndex, int newalbumindex)
     {
-        System.out.println("alin: " + albumIndex + "sel " + photoIndex + "new: " + newalbumindex);
-
         if (user.getAlbum(albumIndex) == null)
             return false;
         if (user.getAlbum(albumIndex).getPhoto(photoIndex) == null)

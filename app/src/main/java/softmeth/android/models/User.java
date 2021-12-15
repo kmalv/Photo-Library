@@ -53,9 +53,9 @@ public class User implements Serializable{
 
     public Album getAlbum(int index)
     {
-        if (albums.size() <= index)
+        if (this.albums.size() <= index)
             return null;
-        return albums.get(index);
+        return this.albums.get(index);
     }
 
     protected boolean deleteAlbum(int index)

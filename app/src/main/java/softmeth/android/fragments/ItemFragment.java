@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -36,14 +37,10 @@ public class ItemFragment extends Fragment {
         Bundle bundle = getArguments();
         int index = bundle.getInt("albumIndex");
         int photoIndex = bundle.getInt("photoIndex");
-        // Set the adapter
-
-        ArrayList<Album> filter = Loader.getAlbums();
-        filter.remove(index);
 
         // Set up recycler view
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list_of_available_albums);
-        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(getContext(), filter);
+        AlbumItemAdapter albumItemAdapter = new AlbumItemAdapter(getContext(), Loader.getAlbums());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(albumItemAdapter);
 
@@ -52,17 +49,24 @@ public class ItemFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 int selected = albumItemAdapter.getSelectedIndex();
-                System.out.println(selected);
-                if(selected >= index){
-                    selected = selected+1;
+                if (selected == index)
+                {
+                    Toast.makeText(getContext(), "You cannot move a photo to the album it's in already.", Toast.LENGTH_SHORT).show();
                 }
+                else if (selected == RecyclerView.NO_POSITION)
+                {
+                    Toast.makeText(getContext(), "No destination album was selected, please try again.", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    if (Loader.movePhoto(index, photoIndex, selected))
+                    {
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putInt("index", index);
 
-                // if(Loader.addPhotoToAlbum())
-                if (Loader.movePhoto(index, photoIndex, selected)){
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putInt("index", index);
-
-                    Navigation.findNavController(view).navigate(R.id.action_itemFragment_to_albumFragment, bundle2);
+                        Toast.makeText(getContext(), "Move Successful.", Toast.LENGTH_SHORT).show();
+                        Navigation.findNavController(view).navigate(R.id.action_itemFragment_to_homeFragment, bundle2);
+                    }
                 }
 
             }
