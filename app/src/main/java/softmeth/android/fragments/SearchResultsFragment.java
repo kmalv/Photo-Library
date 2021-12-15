@@ -28,7 +28,7 @@ public class SearchResultsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_results, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.results_recycleview);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.thumbnail_recyclerview);
         ThumbnailItemAdapter thumbnailItemAdapter = new ThumbnailItemAdapter(getContext(), Loader.getSearchResults());
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));

@@ -115,10 +115,10 @@ public class AlbumFragment extends Fragment {
                 int selected = thumbnailItemAdapter.getSelectedIndex();
                 if (thumbnailItemAdapter.getItemCount() != 0 && selected != RecyclerView.NO_POSITION) {
                     Object[] albums = Loader.getAlbums().toArray();
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("albumIndex", index);
-                    bundle.putInt("photoIndex", selected);
-                    Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_itemFragment, bundle);
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putInt("albumIndex", index);
+                    bundle2.putInt("photoIndex", selected);
+                    Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_itemFragment, bundle2);
                 } else {
                     Toast.makeText(getContext(), "No photo was selected. Please select a photo to move.", Toast.LENGTH_SHORT);
                 }
@@ -134,13 +134,13 @@ public class AlbumFragment extends Fragment {
                 int selected = thumbnailItemAdapter.getSelectedIndex();
                 if (thumbnailItemAdapter.getItemCount() != 0 && selected != RecyclerView.NO_POSITION)
                 {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("albumIndex", index);
-                    bundle.putInt("photoIndex", selected);
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putInt("albumIndex", index);
+                    bundle2.putInt("photoIndex", selected);
 
                     System.out.println("INITIAL: " + selected);
 
-                    Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoViewPagerFragment, bundle);
+                    Navigation.findNavController(view).navigate(R.id.action_albumFragment_to_photoViewPagerFragment, bundle2);
                 }
                 else
                     Toast.makeText(getContext(), "No photo was selected. Please select a photo to open.", Toast.LENGTH_SHORT);
