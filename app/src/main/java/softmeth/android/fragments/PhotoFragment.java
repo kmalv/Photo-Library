@@ -44,8 +44,6 @@ public class PhotoFragment extends Fragment {
         ImageView photoImage = (ImageView) view.findViewById(R.id.photo_image_view);
         photoImage.setImageBitmap(Loader.getPhotoFromAlbum(albumIndex, photoIndex).getImage());
 
-        System.out.println(Loader.getPhotoFromAlbum(albumIndex, photoIndex).getFilename());
-
         TextView filenameTextView = (TextView) view.findViewById(R.id.filename_text_view);
         filenameTextView.setText(Loader.getPhotoFromAlbum(albumIndex, photoIndex).getFilename());
 

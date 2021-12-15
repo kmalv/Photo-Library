@@ -111,20 +111,10 @@ public class Loader {
             {
                 Photo photo = album.getPhoto(photoIndex);
 
-                // Photo probably only exists in this one album
-                if (user.numberOfAlbumsPhotoIsIn(photo) == 1)
-                {
-                    user.getPhotoBank().remove(photo);
-                    user.getAlbum(albumIndex).getPhotos().remove(photo);
-                    saveUser();
-                    return true;
-                }
-                else
-                {
-                    user.getAlbum(albumIndex).getPhotos().remove(photo);
-                    saveUser();
-                    return true;
-                }
+                user.getPhotoBank().remove(photo);
+                user.getAlbum(albumIndex).getPhotos().remove(photo);
+                saveUser();
+                return true;
             }
         }
         return false;
@@ -290,7 +280,6 @@ public class Loader {
             return false;
         if (user.getAlbum(albumIndex).getPhoto(photoIndex).addTag(key, value))
         {
-            System.out.println("SUCCESSFULLY ADDED TAG");
             saveUser();
             return true;
         }

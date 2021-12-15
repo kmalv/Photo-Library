@@ -72,9 +72,9 @@ public class PersonTagItemAdapter extends RecyclerView.Adapter<PersonTagItemAdap
 
         // Ensure that the dataset (list of albums) can actually be rendered
         if (localDataSet == null)
-            System.out.println("Null person localDataSet");
+            return;
         else if (localDataSet.isEmpty())
-            System.out.println("Empty person localDataSet");
+            return;
         else {
             // Ensure there is actually data at this position in the string ArrayList
             if (localDataSet.get(pos) != null) {
@@ -109,8 +109,6 @@ public class PersonTagItemAdapter extends RecyclerView.Adapter<PersonTagItemAdap
                     }
                 });
             }
-            else
-                System.out.println("Null tag at position " + pos);
         }
     }
 

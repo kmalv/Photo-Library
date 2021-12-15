@@ -221,7 +221,6 @@ public class SearchFragment extends Fragment {
                 formattedTags.add(t.getValue());
             }
         }
-        System.out.println(formattedTags);
         return formattedTags;
     }
 }

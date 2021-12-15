@@ -115,8 +115,6 @@ public class ThumbnailItemAdapter extends RecyclerView.Adapter<ThumbnailItemAdap
                     }
                 });
             }
-            else
-                System.out.println("Null album at position " + pos);
         }
     }
 
